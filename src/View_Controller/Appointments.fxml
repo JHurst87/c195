@@ -13,7 +13,7 @@
         <RowConstraints maxHeight="129.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     </rowConstraints>
-        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+        <VBox prefHeight="396.0" prefWidth="197.0" GridPane.columnIndex="1">
                 <Button alignment="CENTER" mnemonicParsing="false" prefHeight="27.0" prefWidth="216.0" text="Add New Appointment" textAlignment="CENTER" />
                 <Button alignment="CENTER" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="216.0" text="Edit Appointment" textAlignment="CENTER" />
                 <Button alignment="CENTER" layoutX="10.0" layoutY="37.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="216.0" text="Delete Appointment" textAlignment="CENTER" />
@@ -21,12 +21,18 @@
         </VBox>
         <TableView fx:id="appointmentsTableView" prefHeight="200.0" prefWidth="200.0">
             <columns>
-                <TableColumn prefWidth="75.0" text="Customer Name" />
-                <TableColumn prefWidth="75.0" text="Title" />
-                <TableColumn prefWidth="75.0" text="Description" />
-                <TableColumn prefWidth="100.0" text="Type" />
-                <TableColumn prefWidth="100.0" text="Start" />
-                <TableColumn prefWidth="100.0" text="End" />
+                <TableColumn fx:id="customerNameCol" prefWidth="114.0" text="Customer Name" />
+                <TableColumn fx:id="titleCol" prefWidth="86.0" text="Title" />
+                <TableColumn fx:id="descriptionCol" prefWidth="104.0" text="Description" />
+                <TableColumn fx:id="typeCol" prefWidth="74.0" text="Type" />
+                <TableColumn fx:id="startCol" prefWidth="95.0" text="Start" />
+                <TableColumn fx:id="endCol" prefWidth="71.0" text="End" />
             </columns>
         </TableView>
+   <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
+      <children>
+         <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="165.0" text="This Month" />
+         <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="165.0" snapToPixel="false" text="This Week" textAlignment="CENTER" HBox.hgrow="NEVER" />
+      </children>
+   </HBox>
 </GridPane>

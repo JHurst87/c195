@@ -1,5 +1,6 @@
 package View_Controller;
 
+import DAO.UserDaoImpl;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,6 +34,8 @@ public class LoginController implements Initializable {
     @FXML
     private Button loginButton;
 
+    private UserDaoImpl user;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         activeLanguage = ResourceBundle.getBundle("AppointmentApp/i18n/rb");
@@ -49,6 +52,7 @@ public class LoginController implements Initializable {
     @FXML
     void onActionLogin(ActionEvent event){
         System.out.println("Login!");
+
         String selectQuery = "SELECT * FROM user WHERE userName = ? AND password = ?";
         Connection conn = DBConnection.startConnection();
         try {

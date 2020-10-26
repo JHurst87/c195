@@ -1,5 +1,7 @@
 package Model;
 
+import utils.DBQuery;
+
 import java.util.Calendar;
 
 public class User {
