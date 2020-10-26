@@ -14,7 +14,7 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     </rowConstraints>
         <VBox prefHeight="396.0" prefWidth="197.0" GridPane.columnIndex="1">
-                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="27.0" prefWidth="216.0" text="Add New Appointment" textAlignment="CENTER" />
+                <Button alignment="CENTER" mnemonicParsing="false" onAction="#onActionAddAppointment" prefHeight="27.0" prefWidth="216.0" text="Add New Appointment" textAlignment="CENTER" />
                 <Button alignment="CENTER" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="216.0" text="Edit Appointment" textAlignment="CENTER" />
                 <Button alignment="CENTER" layoutX="10.0" layoutY="37.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="216.0" text="Delete Appointment" textAlignment="CENTER" />
                 <Button alignment="CENTER" layoutX="10.0" layoutY="64.0" mnemonicParsing="false" onAction="#onActionReturn" prefHeight="27.0" prefWidth="216.0" text="Return to Menu" textAlignment="CENTER" />

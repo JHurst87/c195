@@ -53,6 +53,21 @@ public class AppointmentsController implements Initializable{
         }
     }
 
+    public void onActionAddAppointment(ActionEvent event){
+        System.out.println("Add Appointment");
+        stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/AddAppointment.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+            stage.setTitle("Add Appointment(s)");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void onActionReturn(ActionEvent event){
         System.out.println("Return to Main Menu");
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
