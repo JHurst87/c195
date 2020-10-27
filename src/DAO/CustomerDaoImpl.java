@@ -1,15 +1,51 @@
 package DAO;
 
+import Model.Appointment;
+import Model.Customer;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import utils.DBConnection;
 import utils.DBQuery;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 
 public class CustomerDaoImpl {
+
+    public static ObservableList<Customer> getAll() {
+        ObservableList<Customer> customers = FXCollections.observableArrayList();
+
+        try {
+            String selectQuery = "SELECT * FROM customer";
+            Connection conn = DBConnection.startConnection();
+            DBQuery.setPrepareStatement(conn, selectQuery);
+            PreparedStatement ps = DBQuery.getPreparedStatement();
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+                //Create Customer
+                Customer customer = new Customer(
+                    rs.getInt("customerId"),
+                    rs.getString("customerName"),
+                    rs.getInt("addressId"),
+                    rs.getBoolean("active"),
+                    rs.getTimestamp("createDate"),
+                    rs.getString("createdBy"),
+                    rs.getTimestamp("lastUpdate"),
+                    rs.getString("lastUpdateBy")
+                );
+
+                customers.add(customer);
+            }
+            return customers;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return customers;
+
+
+
+    }
 
     public static String getCustomerName(int customerId){
         try{
