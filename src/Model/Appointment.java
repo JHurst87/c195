@@ -4,6 +4,7 @@ import DAO.CustomerDaoImpl;
 import utils.DBConnection;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class Appointment {
     private int appointmentId;
@@ -13,18 +14,15 @@ public class Appointment {
     private String description;
     private String location;
     private String contact;
+    private Customer customer;
     private String type;
     private String url;
-    private String start;
-    private String end;
-    private Date createDate;
-    private String createdBy;
-    private Timestamp lastUpdate;
-    private String lastUpdateBy;
-    private String customerName;
-    private String userName;
+    private LocalDateTime start;
+    private LocalDateTime end;
 
-    private Customer customer;
+    public Appointment() {
+
+    }
 
     public Appointment(
             int appointmentId,
@@ -36,14 +34,8 @@ public class Appointment {
             String contact,
             String type,
             String url,
-            String start,
-            String end,
-            Date createDate,
-            String createdBy,
-            Timestamp lastUpdate,
-            String lastUpdateBy,
-            String customerName,
-            String userName
+            LocalDateTime start,
+            LocalDateTime end
     ){
         this.appointmentId = appointmentId;
         this.customerId = customerId;
@@ -56,11 +48,6 @@ public class Appointment {
         this.url = url;
         this.start = start;
         this.end = end;
-        this.createDate = createDate;
-        this.createdBy = createdBy;
-        this.lastUpdate = lastUpdate;
-        this.lastUpdateBy = lastUpdateBy;
-        this.customerName = customerName;
     }
 
     public int getAppointmentId() {
@@ -135,68 +122,20 @@ public class Appointment {
         this.url = url;
     }
 
-    public String getStart() {
+    public LocalDateTime getStart() {
         return start;
     }
 
-    public void setStart(String start) {
+    public void setStart(LocalDateTime start) {
         this.start = start;
     }
 
-    public String getEnd() {
+    public LocalDateTime getEnd() {
         return end;
     }
 
-    public void setEnd(String end) {
+    public void setEnd(LocalDateTime end) {
         this.end = end;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Timestamp getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(Timestamp lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
-
-    public String getLastUpdateBy() {
-        return lastUpdateBy;
-    }
-
-    public void setLastUpdateBy(String lastUpdateBy) {
-        this.lastUpdateBy = lastUpdateBy;
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public Customer getCustomer() {

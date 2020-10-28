@@ -21,14 +21,14 @@
             <Button alignment="CENTER" layoutX="10.0" layoutY="37.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="216.0" text="Delete Customer" textAlignment="CENTER" />
             <Button alignment="CENTER" layoutX="10.0" layoutY="64.0" mnemonicParsing="false" onAction="#onActionReturn" prefHeight="27.0" prefWidth="216.0" text="Return to Menu" textAlignment="CENTER" />
          </children></VBox>
-      <TableView prefHeight="200.0" prefWidth="200.0">
+      <TableView fx:id="customerTableView" prefHeight="200.0" prefWidth="200.0">
         <columns>
-            <TableColumn prefWidth="75.0" text="Name" />
-            <TableColumn prefWidth="75.0" text="Address" />
-            <TableColumn prefWidth="75.0" text="Address2" />
-            <TableColumn prefWidth="100.0" text="Phone Number" />
-            <TableColumn prefWidth="100.0" text="City" />
-            <TableColumn prefWidth="100.0" text="Postal/Zip Code" />
+            <TableColumn fx:id="customerNameCol" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="address1Col" prefWidth="75.0" text="Address" />
+            <TableColumn fx:id="address2Col" prefWidth="75.0" text="Address2" />
+            <TableColumn fx:id="phoneCol" prefWidth="100.0" text="Phone Number" />
+            <TableColumn fx:id="cityCol" prefWidth="100.0" text="City" />
+            <TableColumn fx:id="postalCode" prefWidth="100.0" text="Postal/Zip Code" />
 
         </columns>
       </TableView>

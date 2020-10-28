@@ -1,19 +1,20 @@
 package Model;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 public class Address {
     private int addressId;
     private String address;
     private String address2;
-    private int cityId;
+    private City city;
     private String postalCode;
     private String phone;
-    private LocalDate createDate;
-    private String createdBy;
-    private LocalTime lastUpdate;
-    private String lastUpdateBy;
+
+    public Address(){
+
+    }
+
+    public Address(int addresId, String address, String address2, City city, String postalCode, String phone){
+
+    }
 
     public int getAddressId() {
         return addressId;
@@ -39,12 +40,12 @@ public class Address {
         this.address2 = address2;
     }
 
-    public int getCityId() {
-        return cityId;
+    public City getCity() {
+        return city;
     }
 
-    public void setCityId(int cityId) {
-        this.cityId = cityId;
+    public void setCity(City city) {
+        this.city = city;
     }
 
     public String getPostalCode() {
@@ -61,37 +62,5 @@ public class Address {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public LocalDate getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(LocalDate createDate) {
-        this.createDate = createDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public LocalTime getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(LocalTime lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
-
-    public String getLastUpdateBy() {
-        return lastUpdateBy;
-    }
-
-    public void setLastUpdateBy(String lastUpdateBy) {
-        this.lastUpdateBy = lastUpdateBy;
     }
 }

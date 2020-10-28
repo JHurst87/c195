@@ -1,6 +1,6 @@
 package DAO;
 
-import Model.Appointment;
+import DAO.AddressDaoImpl;
 import Model.Customer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,7 +16,7 @@ public class CustomerDaoImpl {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
 
         try {
-            String selectQuery = "SELECT * FROM customer";
+            String selectQuery = "SELECT * FROM customer AS c INNER JOIN address AS a ON c.addressId = a.addressId";
             Connection conn = DBConnection.startConnection();
             DBQuery.setPrepareStatement(conn, selectQuery);
             PreparedStatement ps = DBQuery.getPreparedStatement();
@@ -29,15 +29,11 @@ public class CustomerDaoImpl {
                     rs.getString("customerName"),
                     rs.getInt("addressId"),
                     rs.getBoolean("active"),
-                    rs.getTimestamp("createDate"),
-                    rs.getString("createdBy"),
-                    rs.getTimestamp("lastUpdate"),
-                    rs.getString("lastUpdateBy")
+                    AddressDaoImpl.getById(rs.getInt("addressId"))
                 );
 
                 customers.add(customer);
             }
-            return customers;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

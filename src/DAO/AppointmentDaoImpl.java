@@ -20,25 +20,26 @@ public class AppointmentDaoImpl {
         PreparedStatement ps = DBQuery.getPreparedStatement();
 
         ResultSet rs = ps.executeQuery();
-        return new Appointment(
-                rs.getInt("appointmentId"),
-                rs.getInt("customerId"),
-                rs.getInt("userId"),
-                rs.getString("title"),
-                rs.getString("description"),
-                rs.getString("location"),
-                rs.getString("contact"),
-                rs.getString("type"),
-                rs.getString("url"),
-                rs.getString("start"),
-                rs.getString("end"),
-                rs.getDate("createDate"),
-                rs.getString("createdBy"),
-                rs.getTimestamp("lastUpdate"),
-                rs.getString("lastUpdateBy"),
-                CustomerDaoImpl.getCustomerName(rs.getInt("customerId")),
-                UserDaoImpl.getUserNameById(rs.getInt("userId"))
-        );
+//        return new Appointment(
+//                rs.getInt("appointmentId"),
+//                rs.getInt("customerId"),
+//                rs.getInt("userId"),
+//                rs.getString("title"),
+//                rs.getString("description"),
+//                rs.getString("location"),
+//                rs.getString("contact"),
+//                rs.getString("type"),
+//                rs.getString("url"),
+//                rs.getString("start"),
+//                rs.getString("end"),
+//                rs.getDate("createDate"),
+//                rs.getString("createdBy"),
+//                rs.getTimestamp("lastUpdate"),
+//                rs.getString("lastUpdateBy"),
+//                CustomerDaoImpl.getCustomerName(rs.getInt("customerId")),
+//                UserDaoImpl.getUserNameById(rs.getInt("userId"))
+//        );
+        return new Appointment();
     }
 
     public static ObservableList<Appointment> getAppointmentsThisMonth() throws SQLException {
@@ -51,28 +52,22 @@ public class AppointmentDaoImpl {
 
         ResultSet rs = ps.executeQuery();
 
-        while(rs.next()){
-            Appointment appointment = new Appointment(
-                    rs.getInt("appointmentId"),
-                    rs.getInt("customerId"),
-                    rs.getInt("userId"),
-                    rs.getString("title"),
-                    rs.getString("description"),
-                    rs.getString("location"),
-                    rs.getString("contact"),
-                    rs.getString("type"),
-                    rs.getString("url"),
-                    rs.getString("start"),
-                    rs.getString("end"),
-                    rs.getDate("createDate"),
-                    rs.getString("createdBy"),
-                    rs.getTimestamp("lastUpdate"),
-                    rs.getString("lastUpdateBy"),
-                    CustomerDaoImpl.getCustomerName(rs.getInt("customerId")),
-                    UserDaoImpl.getUserNameById(rs.getInt("userId"))
-                    );
-            apptsThisMonth.add(appointment);
-        }
+//        while(rs.next()){
+////            Appointment appointment = new Appointment(
+////                    rs.getInt("appointmentId"),
+////                    rs.getInt("customerId"),
+////                    rs.getInt("userId"),
+////                    rs.getString("title"),
+////                    rs.getString("description"),
+////                    rs.getString("location"),
+////                    rs.getString("contact"),
+////                    rs.getString("type"),
+////                    rs.getString("url"),
+////                    rs.getString("start"),
+////                    rs.getString("end"),
+////                    );
+//            apptsThisMonth.add(appointment);
+//        }
 
         return apptsThisMonth;
     }

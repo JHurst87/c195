@@ -1,11 +1,16 @@
 package View_Controller;
 
+import DAO.AppointmentDaoImpl;
+import DAO.CustomerDaoImpl;
+import Model.Customer;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.*;
-import utils.DBConnection;
 
 import javafx.event.ActionEvent;
 import java.io.IOException;
@@ -16,17 +21,26 @@ public class CustomersController implements Initializable{
     private Stage stage;
     private Parent scene;
     private Alert alert;
-    /**
-     * Called to initialize a controller after its root element has been
-     * completely processed.
-     *
-     * @param location  The location used to resolve relative paths for the root object, or
-     *                  <tt>null</tt> if the location is not known.
-     * @param resources The resources used to localize the root object, or <tt>null</tt> if
-     */
+
+    @FXML private TableView<Customer> customerTableView;
+    @FXML private TableColumn<Customer, String> customerNameCol;
+    @FXML private TableColumn<Customer, String> address1Col;
+    @FXML private TableColumn<Customer, String> address2Col;
+    @FXML private TableColumn<Customer, String> phoneCol;
+    @FXML private TableColumn<Customer, String> cityCol;
+    @FXML private TableColumn<Customer, String> postalCode;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        //Load Customers
+        ObservableList<Customer> customers = CustomerDaoImpl.getAll();
+        customerNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        address1Col.setCellValueFactory(new PropertyValueFactory<>("address1"));
+        address2Col.setCellValueFactory(new PropertyValueFactory<>("address2"));
+        phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        cityCol.setCellValueFactory(new PropertyValueFactory<>("city"));
+        postalCode.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+        customerTableView.setItems(customers);
     }
 
     public void onActionReturn(ActionEvent event){
