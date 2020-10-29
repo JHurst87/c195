@@ -24,7 +24,7 @@ public class Country {
         this.countryId = countryId;
     }
 
-    public String getCountry() {
+    public String getCountryName() {
         return country;
     }
 
@@ -33,6 +33,6 @@ public class Country {
     }
 
     public String toString(){
-        return this.getCountry();
+        return this.getCountryName();
     }
 }

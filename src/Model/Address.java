@@ -9,11 +9,19 @@ public class Address {
     private String phone;
 
     public Address(){
-
+        this.addressId = 0;
+        this.address = "";
+        this.address2 = "";
+        this.city = new City();
     }
 
-    public Address(int addresId, String address, String address2, City city, String postalCode, String phone){
-
+    public Address(int addressId, String address, String address2, City city, String postalCode, String phone){
+        this.addressId = addressId;
+        this.address = address;
+        this.address2 = address2;
+        this.city = city;
+        this.postalCode = postalCode;
+        this.phone = phone;
     }
 
     public int getAddressId() {

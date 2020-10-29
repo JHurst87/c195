@@ -11,6 +11,14 @@ public class Customer {
     private Boolean active;
     private Address address;
 
+    public Customer(){
+        this.customerId = 0;
+        this.customerName = "";
+        this.addressId = 0;
+        this.active = false;
+        this.address = new Address();
+    }
+
     public Customer(int customerId, String customerName, int addressId, Boolean active, Address address){
         this.customerId = customerId;
         this.customerName = customerName;

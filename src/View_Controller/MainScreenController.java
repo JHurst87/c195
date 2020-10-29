@@ -48,9 +48,10 @@ public class MainScreenController implements Initializable {
         System.out.println("Load Customers screen");
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/Customers.fxml"));
-        Parent root = null;
         try {
-            root = loader.load();
+            View_Controller.CustomersController controller = new View_Controller.CustomersController();
+            loader.setController(controller);
+            Parent root = loader.load();
             stage.setTitle("Customers");
             stage.setScene(new Scene(root));
             stage.show();

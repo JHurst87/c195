@@ -6,7 +6,9 @@ public class City {
     private Country country;
 
     public City(){
-
+        this.cityId = 0;
+        this.cityName = "";
+        this.country = new Country();
     }
 
     public City(int cityId, String cityName, Country country){
