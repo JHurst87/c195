@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.ComboBox?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="480.0" xmlns:fx="http://javafx.com/fxml">
 <Label layoutX="154.0" layoutY="14.0" prefHeight="28.0" prefWidth="190.0" text="Modify Customer">
     <font>
@@ -18,11 +19,11 @@
 
 
 <TextField fx:id="customerId" disable="true" layoutX="47.0" layoutY="69.0" prefHeight="27.0" prefWidth="400.0" style="-fx-background-color: silver;" text="Auto Gen - Disabled" />
-<TextField fx:id="name" layoutX="47.0" layoutY="103.0" prefHeight="27.0" prefWidth="400.0" promptText="Name" />
-<TextField fx:id="address" layoutX="47.0" layoutY="139.0" prefHeight="27.0" prefWidth="400.0" promptText="Address" />
-<TextField fx:id="address2" layoutX="47.0" layoutY="175.0" prefHeight="27.0" prefWidth="400.0" promptText="Address2" />
-<TextField fx:id="postalCode" layoutX="249.0" layoutY="209.0" prefHeight="27.0" prefWidth="200.0" promptText="Zip" />
-<TextField fx:id="city" layoutX="47.0" layoutY="209.0" prefHeight="27.0" prefWidth="200.0" promptText="City" />
-<TextField fx:id="country" layoutX="47.0" layoutY="243.0" prefHeight="27.0" prefWidth="200.0" promptText="Country" />
-   <TextField fx:id="phone" layoutX="249.0" layoutY="243.0" prefHeight="27.0" prefWidth="200.0" promptText="Phone" />
+<TextField fx:id="nameField" layoutX="47.0" layoutY="103.0" prefHeight="27.0" prefWidth="400.0" promptText="Name" />
+<TextField fx:id="addressField" layoutX="47.0" layoutY="139.0" prefHeight="27.0" prefWidth="400.0" promptText="Address" />
+<TextField fx:id="address2Field" layoutX="47.0" layoutY="175.0" prefHeight="27.0" prefWidth="400.0" promptText="Address2" />
+<TextField fx:id="postalCodeField" layoutX="249.0" layoutY="209.0" prefHeight="27.0" prefWidth="200.0" promptText="Zip" />
+<TextField fx:id="cityField" layoutX="47.0" layoutY="209.0" prefHeight="27.0" prefWidth="200.0" promptText="City" />
+<ComboBox fx:id="countryField" layoutX="47.0" layoutY="243.0" prefHeight="27.0" prefWidth="200.0" />
+<TextField fx:id="phoneField" layoutX="249.0" layoutY="243.0" prefHeight="27.0" prefWidth="200.0" promptText="Phone" />
 </AnchorPane>

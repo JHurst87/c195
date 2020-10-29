@@ -1,15 +1,17 @@
 package View_Controller;
 
+import DAO.CountryDaoImpl;
+import Model.Country;
 import Model.Customer;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -21,41 +23,53 @@ public class ModifyCustomerController implements Initializable {
     private Parent scene;
     private Alert alert;
     private Customer customer;
+    private Boolean isNewCustomer = false;
+
+    // GUI Dropdown
+    private ObservableList<Country> countries;
+
     @FXML
     private TextField customerId;
     @FXML
-    private TextField name;
+    private TextField nameField;
     @FXML
-    private TextField address;
+    private TextField addressField;
     @FXML
-    private TextField address2;
+    private TextField address2Field;
     @FXML
-    private TextField postalCode;
+    private TextField postalCodeField;
     @FXML
-    private TextField city;
+    private TextField cityField;
     @FXML
-    private TextField country;
+    private ComboBox<Country> countryField;
 
     @FXML
-    private TextField phone;
+    private TextField phoneField;
 
-    public ModifyCustomerController(Customer selectedCustomer) {
+    public ModifyCustomerController(Customer selectedCustomer, boolean isNewCustomer) {
         this.customer = selectedCustomer;
-        System.out.println("RAn modified constructor!");
+        this.isNewCustomer = isNewCustomer;
+        System.out.println("Ran modified constructor!");
+        if(isNewCustomer){
+            this.customer = new Customer();
+        }
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //System.out.println(this.customer);
-        System.out.println("Loaded Modify Customer!");
-        name.setText(this.customer.getCustomerName());
-        address.setText(this.customer.getAddress().getAddress());
-        address2.setText(this.customer.getAddress().getAddress2());
-        city.setText(this.customer.getAddress().getCity().getCityName());
-        postalCode.setText(this.customer.getAddress().getPostalCode());
-        country.setText(this.customer.getAddress().getCity().getCountry().getCountryName());
-        phone.setText(this.customer.getAddress().getPhone());
-
+        this.countries = CountryDaoImpl.getAllCountries();
+        countryField.setItems(this.countries);
+        if(!isNewCustomer){
+            System.out.println("Loaded Modify Customer!");
+            nameField.setText(this.customer.getCustomerName());
+            addressField.setText(this.customer.getAddress().getAddress());
+            address2Field.setText(this.customer.getAddress().getAddress2());
+            cityField.setText(this.customer.getAddress().getCity().getCityName());
+            postalCodeField.setText(this.customer.getAddress().getPostalCode());
+            countryField.getSelectionModel().select(this.customer.getAddress().getCity().getCountry());
+            System.out.println("Selected CountryId: " + this.customer.getAddress().getCity().getCountry().getCountryId());
+            phoneField.setText(this.customer.getAddress().getPhone());
+        }
     }
 
     @FXML
@@ -67,6 +81,18 @@ public class ModifyCustomerController implements Initializable {
     @FXML
     public void onActionSave(ActionEvent event){
         System.out.println("Save!");
+        String customerName = nameField.getText();
+        String address = addressField.getText();
+        String address2 = address2Field.getText();
+        String city = cityField.getText();
+        String postalCode = postalCodeField.getText();
+        int country = countryField.getSelectionModel().getSelectedIndex();
+        String phone = phoneField.getText();
+
+        if(!isNewCustomer){
+
+        }
+
     }
 
     private void displayMain(ActionEvent event){

@@ -62,7 +62,7 @@ public class CustomersController implements Initializable{
 
     public void onActionEdit(ActionEvent event) throws IOException{
         System.out.println("Edit Customer!");
-        try{
+//        try{
             selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
             if(selectedCustomer == null){
                 alert = new Alert(Alert.AlertType.ERROR);
@@ -72,13 +72,13 @@ public class CustomersController implements Initializable{
             } else {
                 showModifyScreen(event);
             }
-        }
-        catch(IOException e){
-            alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText(e.getMessage());
-            alert.setTitle("Selection Error");
-            alert.show();
-        }
+//        }
+//        catch(IOException e){
+//            alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setContentText(e.getMessage());
+//            alert.setTitle("Selection Error");
+//            alert.show();
+//        }
     }
 
     public void onActionDelete(ActionEvent event) throws IOException{
@@ -120,7 +120,7 @@ public class CustomersController implements Initializable{
     private void showModifyScreen(ActionEvent event) throws IOException{
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/ModifyCustomer.fxml"));
-        View_Controller.ModifyCustomerController controller = new View_Controller.ModifyCustomerController(selectedCustomer);
+        View_Controller.ModifyCustomerController controller = new View_Controller.ModifyCustomerController(selectedCustomer, false);
         loader.setController(controller);
         Parent root = loader.load();
         //ModifyCustomerController controller = loader.getController();
@@ -132,7 +132,8 @@ public class CustomersController implements Initializable{
     private void showScreen(String resource, String title, ActionEvent event) throws IOException {
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource(resource));
-
+        View_Controller.MainScreenController controller = new View_Controller.MainScreenController();
+        loader.setController(controller);
         Parent root = loader.load();
         stage.setTitle(title);
         stage.setScene(new Scene(root));
