@@ -2,6 +2,7 @@ package View_Controller;
 
 import DAO.AppointmentDaoImpl;
 import DAO.CustomerDaoImpl;
+import Model.Address;
 import Model.Customer;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.stage.*;
 
 import javafx.event.ActionEvent;
@@ -24,7 +26,7 @@ public class CustomersController implements Initializable{
 
     @FXML private TableView<Customer> customerTableView;
     @FXML private TableColumn<Customer, String> customerNameCol;
-    @FXML private TableColumn<Customer, String> address1Col;
+    @FXML private TableColumn<Customer, String> addressCol;
     @FXML private TableColumn<Customer, String> address2Col;
     @FXML private TableColumn<Customer, String> phoneCol;
     @FXML private TableColumn<Customer, String> cityCol;
@@ -34,12 +36,13 @@ public class CustomersController implements Initializable{
     public void initialize(URL location, ResourceBundle resources) {
         //Load Customers
         ObservableList<Customer> customers = CustomerDaoImpl.getAll();
-        customerNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-        address1Col.setCellValueFactory(new PropertyValueFactory<>("address1"));
-        address2Col.setCellValueFactory(new PropertyValueFactory<>("address2"));
-        phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        cityCol.setCellValueFactory(new PropertyValueFactory<>("city"));
-        postalCode.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+
+        customerNameCol.setCellValueFactory(data-> new SimpleStringProperty(data.getValue().getCustomerName()));
+        addressCol.setCellValueFactory(data-> new SimpleStringProperty(data.getValue().getAddress().getAddress()));
+        address2Col.setCellValueFactory(data-> new SimpleStringProperty(data.getValue().getAddress().getAddress2()));
+        phoneCol.setCellValueFactory(data-> new SimpleStringProperty(data.getValue().getAddress().getPhone()));
+        cityCol.setCellValueFactory(data-> new SimpleStringProperty(data.getValue().getAddress().getCity().getCityName()));
+        postalCode.setCellValueFactory(data-> new SimpleStringProperty(data.getValue().getAddress().getPostalCode()));
         customerTableView.setItems(customers);
     }
 

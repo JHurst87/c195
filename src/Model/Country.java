@@ -7,6 +7,10 @@ public class Country {
     private int countryId;
     private String country;
 
+    public Country(){
+
+    }
+
     public Country(int countryId, String country){
         this.countryId = countryId;
         this.country = country;

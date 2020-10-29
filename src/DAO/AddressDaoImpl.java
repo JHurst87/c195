@@ -1,5 +1,6 @@
 package DAO;
 
+import Main.AppointmentApp;
 import Model.Address;
 import Model.City;
 import utils.DBConnection;
@@ -10,29 +11,32 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class AddressDaoImpl implements AddressDaoImplInterface{
-    private static Address address;
+import Main.AppointmentApp.*;
+
+public class AddressDaoImpl{
+    public final static Connection conn = AppointmentApp.conn;
     public static Address getById(int addressId){
 
-        address = new Address();
+        Address address = new Address();
 
-        Connection conn = DBConnection.startConnection();
         String query = "SELECT * FROM address WHERE addressId = ?";
         try {
             DBQuery.setPrepareStatement(conn, query);
             PreparedStatement ps = DBQuery.getPreparedStatement();
+
             ps.setInt(1, addressId);
             ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                address.setAddressId(rs.getInt("addressId"));
+                address.setAddress(rs.getString("address"));
+                address.setAddress2(rs.getString("address2"));
+                address.setCity(CityDaoImpl.getCity(rs.getInt("cityId")));
+                address.setPostalCode(rs.getString("postalCode"));
+                address.setPhone(rs.getString("phone"));
 
-            CityDaoImpl city = new CityDaoImpl();
-            address = new Address(
-                    rs.getInt("addressId"),
-                    rs.getString("address"),
-                    rs.getString("address2"),
-                    city.getCity(rs.getInt("cityId")),
-                    rs.getString("postalCode"),
-                    rs.getString("phone")
-            );
+                return address;
+            }
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

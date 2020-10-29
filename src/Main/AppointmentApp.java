@@ -10,6 +10,7 @@ import utils.DBQuery;
 import java.sql.*;
 
 public class AppointmentApp extends Application {
+    public static Connection conn = DBConnection.startConnection();
     @Override
     public void start(Stage primaryStage) throws Exception {
         System.out.println("Started!");
@@ -25,8 +26,6 @@ public class AppointmentApp extends Application {
     }
 
     public static void main(String args[]) throws SQLException {
-        Connection conn = DBConnection.startConnection();
-
 //        String insertStatement = "INSERT INTO country(country, createDate, createdBy, lastUpdateBy) VALUES (?, ?, ?, ?)";
 
 //        DBQuery.setPrepareStatement(conn, insertStatement); //Create prepared statement

@@ -24,7 +24,7 @@ public class City {
     }
 
     public String getCityName() {
-        return cityName;
+        return this.cityName;
     }
 
     public void setCityName(String cityName) {

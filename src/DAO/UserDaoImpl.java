@@ -1,4 +1,5 @@
 package DAO;
+import Main.AppointmentApp;
 import Model.Appointment;
 import Model.User;
 
@@ -13,6 +14,7 @@ import javafx.collections.ObservableList;
 import utils.*;
 
 public class UserDaoImpl {
+    public final static Connection conn = AppointmentApp.conn;
     static boolean act;
     public static User getUserId(String userName) throws SQLException, Exception{
 
@@ -22,7 +24,6 @@ public class UserDaoImpl {
 
     public static String getUserNameById(int userId) {
         String selectQuery = "SELECT * FROM user WHERE userId = ?";
-        Connection conn = DBConnection.startConnection();
         try {
             DBQuery.setPrepareStatement(conn, selectQuery);
             PreparedStatement ps = DBQuery.getPreparedStatement();

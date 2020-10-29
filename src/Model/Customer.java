@@ -51,4 +51,8 @@ public class Customer {
     public void setActive(Boolean active) {
         this.active = active;
     }
+
+    public Address getAddress(){
+        return this.address;
+    }
 }

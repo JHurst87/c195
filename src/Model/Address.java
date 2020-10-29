@@ -17,7 +17,7 @@ public class Address {
     }
 
     public int getAddressId() {
-        return addressId;
+        return this.addressId;
     }
 
     public void setAddressId(int addressId) {
@@ -25,7 +25,7 @@ public class Address {
     }
 
     public String getAddress() {
-        return address;
+        return this.address;
     }
 
     public void setAddress(String address) {
@@ -33,7 +33,7 @@ public class Address {
     }
 
     public String getAddress2() {
-        return address2;
+        return this.address2;
     }
 
     public void setAddress2(String address2) {
@@ -41,7 +41,7 @@ public class Address {
     }
 
     public City getCity() {
-        return city;
+        return this.city;
     }
 
     public void setCity(City city) {
@@ -49,7 +49,7 @@ public class Address {
     }
 
     public String getPostalCode() {
-        return postalCode;
+        return this.postalCode;
     }
 
     public void setPostalCode(String postalCode) {
@@ -57,7 +57,7 @@ public class Address {
     }
 
     public String getPhone() {
-        return phone;
+        return this.phone;
     }
 
     public void setPhone(String phone) {

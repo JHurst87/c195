@@ -1,6 +1,7 @@
 package DAO;
 
 import DAO.AddressDaoImpl;
+import Main.AppointmentApp;
 import Model.Customer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,19 +12,19 @@ import java.sql.*;
 
 
 public class CustomerDaoImpl {
-
+    public final static Connection conn = AppointmentApp.conn;
     public static ObservableList<Customer> getAll() {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
 
         try {
-            String selectQuery = "SELECT * FROM customer AS c INNER JOIN address AS a ON c.addressId = a.addressId";
-            Connection conn = DBConnection.startConnection();
+            String selectQuery = "SELECT * FROM customer";
             DBQuery.setPrepareStatement(conn, selectQuery);
             PreparedStatement ps = DBQuery.getPreparedStatement();
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {
                 //Create Customer
+                System.out.println("Getting customer with id:" + rs.getInt("customerId"));
                 Customer customer = new Customer(
                     rs.getInt("customerId"),
                     rs.getString("customerName"),
@@ -31,6 +32,8 @@ public class CustomerDaoImpl {
                     rs.getBoolean("active"),
                     AddressDaoImpl.getById(rs.getInt("addressId"))
                 );
+
+                System.out.println("Getting address with id:" + rs.getInt("addressId"));
 
                 customers.add(customer);
             }
@@ -45,9 +48,7 @@ public class CustomerDaoImpl {
 
     public static String getCustomerName(int customerId){
         try{
-            DBConnection.startConnection();
             String selectQuery = "SELECT customerName FROM customer WHERE customerId = ?";
-            Connection conn = DBConnection.startConnection();
             DBQuery.setPrepareStatement(conn, selectQuery);
             PreparedStatement ps = DBQuery.getPreparedStatement();
             ps.setInt(1, customerId);

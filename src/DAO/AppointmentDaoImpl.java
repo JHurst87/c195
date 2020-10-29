@@ -1,5 +1,6 @@
 package DAO;
 
+import Main.AppointmentApp;
 import Model.Appointment;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,9 +14,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AppointmentDaoImpl {
+    public final static Connection conn = AppointmentApp.conn;
     public static Appointment getAppointmentById(int id) throws SQLException {
         String selectQuery = "SELECT * FROM appointment WHERE appointmentId = ?";
-        Connection conn = DBConnection.startConnection();
         DBQuery.setPrepareStatement(conn, selectQuery);
         PreparedStatement ps = DBQuery.getPreparedStatement();
 
@@ -46,7 +47,6 @@ public class AppointmentDaoImpl {
         //String selectQuery = "SELECT * FROM appointment WHERE start BETWEEN ? AND  ?";
         ObservableList<Appointment> apptsThisMonth = FXCollections.observableArrayList();
         String selectQuery = "SELECT * FROM appointment";
-        Connection conn = DBConnection.startConnection();
         DBQuery.setPrepareStatement(conn, selectQuery);
         PreparedStatement ps = DBQuery.getPreparedStatement();
 
