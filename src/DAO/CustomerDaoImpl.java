@@ -3,6 +3,7 @@ package DAO;
 import DAO.AddressDaoImpl;
 import Main.AppointmentApp;
 import Model.Customer;
+import com.mysql.cj.protocol.Resultset;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import utils.DBConnection;
@@ -69,7 +70,7 @@ public class CustomerDaoImpl {
         );
 
         try{
-            String generatedColumns[] = {"customerId"};
+            String[] generatedColumns = {"customerId"};
             PreparedStatement ps = conn.prepareStatement(query, generatedColumns);
             ps.setString(1, customer.getCustomerName());
             ps.setInt(2, customer.getAddress().getAddressId());
@@ -90,7 +91,7 @@ public class CustomerDaoImpl {
 
         Customer customer = new Customer();
         try{
-            String selectQuery = "SELECT customerName FROM customer WHERE customerId = ?";
+            String selectQuery = "SELECT * FROM customer WHERE customerId = ?";
             DBQuery.setPrepareStatement(conn, selectQuery);
             PreparedStatement ps = DBQuery.getPreparedStatement();
             ps.setInt(1, customerId);
@@ -129,7 +130,7 @@ public class CustomerDaoImpl {
         String query = String.join(" ",
                 "UPDATE customer",
                 "SET customerName=?,",
-                "addressId=?",
+                "addressId=?,",
                 "lastUpdate=NOW(),",
                 "lastUpdateBy='test'",
                 "WHERE customerId=?"
@@ -140,7 +141,9 @@ public class CustomerDaoImpl {
             ps.setString(1, customer.getCustomerName());
             ps.setInt(2, customer.getAddress().getAddressId());
             ps.setInt(3, customer.getCustomerId());
-            ps.execute();
+            int affectedRows = ps.executeUpdate();
+
+            System.out.println("Affected Rows: " + affectedRows);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
