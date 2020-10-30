@@ -1,6 +1,7 @@
 package View_Controller;
 
 import Model.*;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,6 +26,7 @@ public class AppointmentsController implements Initializable{
     private Parent scene;
     private Alert alert;
     private ObservableList<Appointment> appointments;
+    private Appointment selectedApppointment;
 
     //Appointments
 
@@ -39,21 +41,18 @@ public class AppointmentsController implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //Load Appointments by Month View (default)
-        try {
-            appointments = AppointmentDaoImpl.getAppointmentsThisMonth();
-            customerNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-            titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
-            descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
-            typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
-            startCol.setCellValueFactory(new PropertyValueFactory<>("start"));
-            endCol.setCellValueFactory(new PropertyValueFactory<>("end"));
-            appointmentsTableView.setItems(appointments);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        appointments = AppointmentDaoImpl.getAll();
+        // Set values using a Lambda function to help display strings from the embedded classes/properties
+        customerNameCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getCustomer().getCustomerName()));
+        titleCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getTitle()));
+        descriptionCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getDescription()));
+        typeCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getType()));
+        startCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getStart().toString()));
+        endCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getEnd().toString()));
+        appointmentsTableView.setItems(appointments);
     }
 
-    public void onActionAddAppointment(ActionEvent event){
+    public void onActionAdd(ActionEvent event){
         System.out.println("Add Appointment");
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/AddAppointment.fxml"));
@@ -68,14 +67,49 @@ public class AppointmentsController implements Initializable{
         }
     }
 
+    public void onActionEdit(ActionEvent event){
+        System.out.println("Modify Appointment");
+        selectedApppointment = appointmentsTableView.getSelectionModel().getSelectedItem();
+        if(selectedApppointment == null){
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Appointment Selection Error");
+            alert.setContentText("Please select a valid Appointment");
+            alert.show();
+        } else {
+            ModifyAppointmentController controller = new ModifyAppointmentController(this.selectedApppointment, false);
+            displayModifyAppointment("/View_Controller/ModifyAppointment.fxml", "Modify Appointment", event, controller);
+        }
+    }
+
+    public void onActionDelete(ActionEvent event){
+        System.out.println("Delete Appointment");
+    }
+
     public void onActionReturn(ActionEvent event){
         System.out.println("Return to Main Menu");
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/MainScreen.fxml"));
+        View_Controller.MainScreenController controller = new View_Controller.MainScreenController();
+        loader.setController(controller);
         Parent root = null;
         try {
             root = loader.load();
             stage.setTitle("Appointments");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void displayModifyAppointment(String resource, String title, ActionEvent event, Object controller){
+        stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(resource));
+        loader.setController(controller);
+        Parent root = null;
+        try {
+            root = loader.load();
+            stage.setTitle(title);
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {

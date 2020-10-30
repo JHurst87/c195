@@ -61,4 +61,8 @@ public class Customer {
     public Address getAddress(){
         return this.address;
     }
+
+    public String toString(){
+        return customerName;
+    }
 }

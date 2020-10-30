@@ -32,6 +32,8 @@ public class MainScreenController implements Initializable {
         System.out.println("Load Appointments screen");
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/Appointments.fxml"));
+        View_Controller.AppointmentsController controller = new AppointmentsController();
+        loader.setController(controller);
         Parent root = null;
         try {
             root = loader.load();
