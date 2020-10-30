@@ -8,8 +8,7 @@ import java.time.LocalDateTime;
 
 public class Appointment {
     private int appointmentId;
-    private int customerId;
-    private int userId;
+    private User user;
     private String title;
     private String description;
     private String location;
@@ -21,13 +20,21 @@ public class Appointment {
     private LocalDateTime end;
 
     public Appointment() {
-
+        this.appointmentId = 0;
+        this.title = "";
+        this.description = "";
+        this.location = "";
+        this.contact = "";
+        this.type = "";
+        this.url = "";
+        this.start = null;
+        this.end = null;
+        this.user = null;
+        this.customer = null;
     }
 
     public Appointment(
             int appointmentId,
-            int customerId,
-            int userId,
             String title,
             String description,
             String location,
@@ -35,11 +42,11 @@ public class Appointment {
             String type,
             String url,
             LocalDateTime start,
-            LocalDateTime end
+            LocalDateTime end,
+            User user,
+            Customer customer
     ){
         this.appointmentId = appointmentId;
-        this.customerId = customerId;
-        this.userId = userId;
         this.title = title;
         this.description = description;
         this.location = location;
@@ -48,6 +55,8 @@ public class Appointment {
         this.url = url;
         this.start = start;
         this.end = end;
+        this.user = user;
+        this.customer = customer;
     }
 
     public int getAppointmentId() {
@@ -56,22 +65,6 @@ public class Appointment {
 
     public void setAppointmentId(int appointmentId) {
         this.appointmentId = appointmentId;
-    }
-
-    public int getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public String getTitle() {
@@ -144,5 +137,49 @@ public class Appointment {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public User getUser(){
+        return this.user;
+    }
+
+    public void setUser(User user){
+        this.user = user;
+    }
+
+    public boolean isValid(){
+        if(this.customer == null){
+            return false;
+        }
+
+        if(this.title.equals("")){
+            return false;
+        }
+
+        if(this.description.equals("")){
+            return false;
+        }
+
+        if (this.location.equals("")) {
+            return false;
+        }
+
+        if (this.contact.equals("")) {
+            return false;
+        }
+
+        if (this.url.equals("")) {
+            return false;
+        }
+
+        if (this.start == null) {
+            return false;
+        }
+
+        if (this.end == null) {
+            return false;
+        }
+
+        return true;
     }
 }

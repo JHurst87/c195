@@ -2,6 +2,7 @@ package View_Controller;
 
 import DAO.UserDaoImpl;
 import Main.AppointmentApp;
+import Model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -65,6 +66,9 @@ public class LoginController implements Initializable {
             ResultSet rs = ps.executeQuery();
 
             if(rs.next() && rs.getInt("userID") > 0){
+                //Get User
+
+                AppointmentApp.user = UserDaoImpl.getById(rs.getInt("userId"));
                 // Change stage
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("View_Controller/MainScreen.fxml"));

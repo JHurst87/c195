@@ -1,5 +1,6 @@
 package Main;
 
+import Model.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -10,6 +11,8 @@ import utils.DBQuery;
 import java.sql.*;
 
 public class AppointmentApp extends Application {
+
+    public static User user;
     public static Connection conn = DBConnection.startConnection();
     @Override
     public void start(Stage primaryStage) throws Exception {

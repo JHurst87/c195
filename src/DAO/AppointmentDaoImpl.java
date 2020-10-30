@@ -24,8 +24,6 @@ public class AppointmentDaoImpl {
         ResultSet rs = ps.executeQuery();
         Appointment appointment = new Appointment();
                 appointment.setAppointmentId(rs.getInt("appointmentId"));
-                appointment.setCustomerId(rs.getInt("customerId"));
-                appointment.setUserId(rs.getInt("userId"));
                 appointment.setTitle(rs.getString("title"));
                 appointment.setDescription(rs.getString("description"));
                 appointment.setLocation(rs.getString("location"));
@@ -35,6 +33,7 @@ public class AppointmentDaoImpl {
                 appointment.setStart(rs.getTimestamp("start").toLocalDateTime());
                 appointment.setEnd(rs.getTimestamp("end").toLocalDateTime());
                 appointment.setCustomer(CustomerDaoImpl.getById(rs.getInt("customerId")));
+                appointment.setUser(UserDaoImpl.getById(rs.getInt("userId")));
         return appointment;
     }
 
@@ -116,27 +115,29 @@ public class AppointmentDaoImpl {
     public static int create(Appointment appointment){
         String[] generatedColumns = {"appointmentId"};
         String query = String.join(" ", "INSERT INTO appointment",
-                "(customerId, title, description, location, contact, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy)",
+                "(customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy)",
                 "VALUES",
-                "(?, ?, ?, ?, ?, ?, ?, ?, NOW(), 'test', NOW(), 'test')"
+                "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), 'test', NOW(), 'test')"
         );
 
         try{
             PreparedStatement ps = conn.prepareStatement(query, generatedColumns);
             ps.setInt(1, appointment.getCustomer().getCustomerId());
-            ps.setString(2, appointment.getTitle());
-            ps.setString(3, appointment.getDescription());
-            ps.setString(4, appointment.getLocation());
-            ps.setString(5, appointment.getContact());
-            ps.setString(6, appointment.getUrl());
+            ps.setInt(2, appointment.getUser().getUserId());
+            ps.setString(3, appointment.getTitle());
+            ps.setString(4, appointment.getDescription());
+            ps.setString(5, appointment.getLocation());
+            ps.setString(6, appointment.getContact());
+            ps.setString(7, appointment.getType());
+            ps.setString(8, appointment.getUrl());
 
             //Set time to UTC/ZULU time
             ZoneId zone = ZoneId.systemDefault();
             LocalDateTime startTimeUTC = appointment.getStart().atZone(zone).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
             LocalDateTime endTimeUTC = appointment.getEnd().atZone(zone).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
 
-            ps.setTimestamp(7, Timestamp.valueOf(startTimeUTC));
-            ps.setTimestamp(8, Timestamp.valueOf(endTimeUTC));
+            ps.setTimestamp(9, Timestamp.valueOf(startTimeUTC));
+            ps.setTimestamp(10, Timestamp.valueOf(endTimeUTC));
 
             ps.execute();
 
@@ -171,7 +172,7 @@ public class AppointmentDaoImpl {
         try{
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, appointment.getCustomer().getCustomerId());
-            ps.setInt(2, appointment.getUserId());
+            ps.setInt(2, appointment.getUser().getUserId());
             ps.setString(3, appointment.getTitle());
             ps.setString(4, appointment.getDescription());
             ps.setString(5, appointment.getLocation());

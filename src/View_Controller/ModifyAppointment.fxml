@@ -8,33 +8,38 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="560.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="680.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
+      <AnchorPane layoutX="22.0" layoutY="43.0" prefHeight="444.0" prefWidth="436.0">
+         <children>
+            <ComboBox fx:id="apptCustomerComboBox" layoutY="8.0" prefHeight="45.0" prefWidth="436.0" promptText="Choose a Customer" />
+            <TextField fx:id="apptTitle" layoutY="111.0" prefHeight="45.0" prefWidth="436.0" promptText="Title" />
+            <ComboBox fx:id="apptContactComboBox" layoutY="162.0" prefHeight="45.0" prefWidth="436.0" promptText="Choose a Consultant" />
+            <TextField fx:id="apptURL" layoutY="279.0" prefHeight="45.0" prefWidth="436.0" promptText="URL" />
+            <TextField fx:id="apptLocation" layoutY="331.0" prefHeight="45.0" prefWidth="436.0" promptText="Location" />
+            <DatePicker fx:id="apptDate" layoutY="385.0" prefHeight="45.0" prefWidth="436.0" promptText="Date" />
+            <TextField fx:id="apptDescription" layoutY="59.0" prefHeight="45.0" prefWidth="436.0" promptText="Description" />
+            <ComboBox fx:id="apptTypeComboBox" layoutY="222.0" prefHeight="45.0" prefWidth="436.0" promptText="Choose Appointment Type" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="1.0" layoutY="490.0" prefHeight="143.0" prefWidth="480.0">
+         <children>
+            <ComboBox fx:id="apptEndAMPM" layoutX="402.0" layoutY="17.0" prefHeight="45.0" prefWidth="67.0" promptText="AM" />
+            <ComboBox fx:id="apptEndMinutes" layoutX="334.0" layoutY="17.0" prefHeight="45.0" prefWidth="70.0" promptText="MM" />
+            <ComboBox fx:id="apptStartAMPM" layoutX="146.0" layoutY="17.0" prefHeight="45.0" prefWidth="67.0" promptText="AM" />
+            <Label layoutX="19.0" layoutY="1.0" text="Start Time" />
+            <ComboBox fx:id="apptStartHours" layoutX="14.0" layoutY="17.0" prefHeight="45.0" prefWidth="67.0" promptText="HH" />
+            <ComboBox fx:id="apptStartMinutes" layoutX="79.0" layoutY="17.0" prefHeight="45.0" prefWidth="70.0" promptText="MM" />
+            <Label layoutX="267.0" layoutY="1.0" text="End Time" />
+            <ComboBox fx:id="apptEndHours" layoutX="267.0" layoutY="17.0" prefHeight="45.0" prefWidth="67.0" promptText="HH" />
+            <Button layoutX="73.0" layoutY="108.0" mnemonicParsing="false" onAction="#onActionSave" prefHeight="45.0" prefWidth="140.0" text="Save" />
+            <Button layoutX="264.0" layoutY="108.0" mnemonicParsing="false" onAction="#onActionCancel" prefHeight="45.0" prefWidth="140.0" text="Cancel" />
+         </children>
+      </AnchorPane>
       <Label layoutX="175.0" layoutY="14.0" text="Appointment">
           <font>
               <Font size="24.0" />
           </font>
       </Label>
-      <AnchorPane layoutX="22.0" layoutY="43.0" prefHeight="364.0" prefWidth="436.0">
-         <children>
-            <ComboBox fx:id="apptCustomerComboBox" layoutY="8.0" prefHeight="45.0" prefWidth="436.0" promptText="Choose a Customer" />
-            <TextField fx:id="apptTitle" layoutY="111.0" prefHeight="45.0" prefWidth="436.0" promptText="Title" />
-            <ComboBox fx:id="apptContact" layoutY="162.0" prefHeight="45.0" prefWidth="436.0" promptText="Choose a Consultant" />
-            <TextField fx:id="apptURL" layoutY="214.0" prefHeight="45.0" prefWidth="436.0" promptText="URL" />
-            <TextField fx:id="apptLocation" layoutY="266.0" prefHeight="45.0" prefWidth="436.0" promptText="Location" />
-            <DatePicker fx:id="apptDate" layoutY="320.0" prefHeight="45.0" prefWidth="436.0" promptText="Date" />
-            <TextField fx:id="apptDescription" layoutY="59.0" prefHeight="45.0" prefWidth="436.0" promptText="Description" />
-         </children>
-      </AnchorPane>
-      <ComboBox fx:id="apptStartHours" layoutX="14.0" layoutY="434.0" prefHeight="45.0" prefWidth="67.0" promptText="HH" />
-      <ComboBox fx:id="apptStartMinutes" layoutX="81.0" layoutY="434.0" prefHeight="45.0" prefWidth="85.0" promptText="MM" />
-      <Button layoutX="97.0" layoutY="488.0" mnemonicParsing="false" onAction="#onActionSave" prefHeight="45.0" prefWidth="140.0" text="Save" />
-      <Button layoutX="251.0" layoutY="488.0" mnemonicParsing="false" onAction="#onActionCancel" prefHeight="45.0" prefWidth="140.0" text="Cancel" />
-      <ComboBox fx:id="apptStartAMPM" layoutX="167.0" layoutY="434.0" prefHeight="45.0" prefWidth="85.0" promptText="AM" />
-      <Label layoutX="14.0" layoutY="417.0" text="Start Time" />
-      <Label layoutX="257.0" layoutY="417.0" text="End Time" />
-      <ComboBox fx:id="apptEndHours" layoutX="257.0" layoutY="434.0" prefHeight="45.0" prefWidth="67.0" promptText="HH" />
-      <ComboBox fx:id="apptEndMinutes" layoutX="324.0" layoutY="434.0" prefHeight="45.0" prefWidth="78.0" promptText="MM" />
-      <ComboBox fx:id="apptEndAMPM" layoutX="402.0" layoutY="434.0" prefHeight="45.0" prefWidth="78.0" promptText="AM" />
    </children>
 </AnchorPane>

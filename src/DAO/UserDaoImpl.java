@@ -60,4 +60,22 @@ public class UserDaoImpl {
         }
         return users;
     }
+
+    public static User getById(int userId) throws SQLException {
+        User user = new User();
+        String selectQuery = "SELECT * FROM user WHERE userId = ?";
+
+        DBQuery.setPrepareStatement(conn, selectQuery);
+        PreparedStatement ps = DBQuery.getPreparedStatement();
+
+        ResultSet rs = ps.executeQuery();
+        if(rs.next()){
+
+            user.setUserId(rs.getInt("userId"));
+            user.setName(rs.getString("userName"));
+
+            return user;
+        }
+        return user;
+    }
 }
