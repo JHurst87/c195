@@ -1,5 +1,6 @@
 package View_Controller;
 
+import DAO.CustomerDaoImpl;
 import Model.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
@@ -19,6 +20,9 @@ import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class AppointmentsController implements Initializable{
@@ -27,6 +31,8 @@ public class AppointmentsController implements Initializable{
     private Alert alert;
     private ObservableList<Appointment> appointments;
     private Appointment selectedApppointment;
+    private DateTimeFormatter appointmentTimeFormat = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
+    public String currentView = "monthly";
 
     //Appointments
 
@@ -47,8 +53,8 @@ public class AppointmentsController implements Initializable{
         titleCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getTitle()));
         descriptionCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getDescription()));
         typeCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getType()));
-        startCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getStart().toString()));
-        endCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getEnd().toString()));
+        startCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getStart().format(appointmentTimeFormat)));
+        endCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getEnd().format(appointmentTimeFormat)));
         appointmentsTableView.setItems(appointments);
     }
 
@@ -83,6 +89,41 @@ public class AppointmentsController implements Initializable{
 
     public void onActionDelete(ActionEvent event){
         System.out.println("Delete Appointment");
+
+        //Soft Delete
+
+        try{
+            selectedApppointment = appointmentsTableView.getSelectionModel().getSelectedItem();
+            if( selectedApppointment == null) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Please select a valid Appointment");
+                alert.setTitle("Selection Error");
+                alert.show();
+            } else {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Delete Part?");
+                alert.setContentText("Delete appointment with " + selectedApppointment.getCustomer() +
+                        " starting at "+ selectedApppointment.getStart().format(appointmentTimeFormat) + " ?");
+                Optional<ButtonType> option = alert.showAndWait();
+                if(option.isPresent() && option.get() == ButtonType.OK) {
+                    AppointmentDaoImpl.delete(selectedApppointment);
+                    System.out.println("Delete and update view!");
+                    setAppointmentTableView();
+                }
+            }
+        }
+        catch(Exception e){
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText(e.getMessage());
+            alert.setTitle("No Customer Selected Error");
+            alert.show();
+        }
+
+    }
+
+    private void setAppointmentTableView() {
+        ObservableList<Appointment> appointments = AppointmentDaoImpl.getAll();
+        appointmentsTableView.setItems(appointments);
     }
 
     public void onActionReturn(ActionEvent event){

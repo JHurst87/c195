@@ -107,10 +107,10 @@ public class ModifyAppointmentController implements Initializable {
 
             System.out.println("Start: " + this.appointment.getStart().format(appointmentTimeFormat));
             apptStartHours.getSelectionModel().select((this.appointment.getStart().format(appointmentHourFormatter)));
-            apptStartMinutes.getSelectionModel().select("" + this.appointment.getStart().getMinute());
+            apptStartMinutes.getSelectionModel().select("" + this.appointment.getStart().format(appointmentMinuteFormatter));
             apptStartAMPM.getSelectionModel().select(this.appointment.getStart().getHour() < 12 ? "AM":"PM");
 
-            apptEndHours.getSelectionModel().select((this.appointment.getEnd().getHour() % 12) -1);
+            apptEndHours.getSelectionModel().select((this.appointment.getEnd().format(appointmentHourFormatter)));
             apptEndMinutes.getSelectionModel().select("" + this.appointment.getEnd().format(appointmentMinuteFormatter));
             apptEndAMPM.getSelectionModel().select(this.appointment.getEnd().getHour() < 12 ? "AM":"PM");
 
