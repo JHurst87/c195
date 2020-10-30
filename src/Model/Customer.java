@@ -7,14 +7,12 @@ import java.time.LocalTime;
 public class Customer {
     private int customerId;
     private String customerName;
-    private int addressId;
     private Boolean active;
     private Address address;
 
     public Customer(){
         this.customerId = 0;
         this.customerName = "";
-        this.addressId = 0;
         this.active = false;
         this.address = new Address();
     }
@@ -22,7 +20,6 @@ public class Customer {
     public Customer(int customerId, String customerName, int addressId, Boolean active, Address address){
         this.customerId = customerId;
         this.customerName = customerName;
-        this.addressId = addressId;
         this.active = active;
         this.address = address;
     }
@@ -33,10 +30,6 @@ public class Customer {
 
     public String getCustomerName(){
         return this.customerName;
-    }
-
-    public int getAddressId(){
-        return this.addressId;
     }
 
     public Boolean getActive(){
@@ -52,8 +45,9 @@ public class Customer {
         this.customerName = customerName;
     }
 
-    public void setAddressId(int addressId) {
-        this.addressId = addressId;
+
+    public void setAddress(Address address){
+        this.address = address;
     }
 
     public void setActive(Boolean active) {

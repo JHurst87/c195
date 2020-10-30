@@ -71,4 +71,8 @@ public class Address {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+    public boolean isValid() {
+        return getAddressId() != 0 && getAddress() != "" && getCity().getCityId() != 0 && getPostalCode() != "" && getPhone() != "";
+    }
 }

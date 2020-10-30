@@ -55,14 +55,21 @@ public class CustomersController implements Initializable{
 
     public void onActionAdd(ActionEvent event) throws IOException {
         System.out.println("Add Customer!");
-        showScreen("/View_Controller/AddCustomer.fxml", "Add Customer", event);
+        stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/ModifyCustomer.fxml"));
+        View_Controller.ModifyCustomerController controller = new View_Controller.ModifyCustomerController(new Customer(),true);
+        loader.setController(controller);
+        Parent root = loader.load();
+        stage.setTitle("Add Customer");
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
 
 
     public void onActionEdit(ActionEvent event) throws IOException{
         System.out.println("Edit Customer!");
-//        try{
+        try{
             selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
             if(selectedCustomer == null){
                 alert = new Alert(Alert.AlertType.ERROR);
@@ -70,15 +77,15 @@ public class CustomersController implements Initializable{
                 alert.setContentText("Please select a valid Customer");
                 alert.show();
             } else {
-                showModifyScreen(event);
+                showModifyScreen(event, false);
             }
-//        }
-//        catch(IOException e){
-//            alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setContentText(e.getMessage());
-//            alert.setTitle("Selection Error");
-//            alert.show();
-//        }
+        }
+        catch(IOException e){
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText(e.getMessage());
+            alert.setTitle("Selection Error");
+            alert.show();
+        }
     }
 
     public void onActionDelete(ActionEvent event) throws IOException{
@@ -97,7 +104,6 @@ public class CustomersController implements Initializable{
                 Optional<ButtonType> option = alert.showAndWait();
                 if(option.isPresent() && option.get() == ButtonType.OK) {
                     CustomerDaoImpl.delete(selectedCustomer);
-                    //productsTableView.setItems(Inventory.getAllProducts());
                     System.out.println("Delete and update view!");
                     setCustomerTableView();
                 }
@@ -117,14 +123,18 @@ public class CustomersController implements Initializable{
         customerTableView.setItems(customers);
     }
 
-    private void showModifyScreen(ActionEvent event) throws IOException{
+    private void showModifyScreen(ActionEvent event, Boolean isNewCustomer) throws IOException{
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/ModifyCustomer.fxml"));
-        View_Controller.ModifyCustomerController controller = new View_Controller.ModifyCustomerController(selectedCustomer, false);
+        View_Controller.ModifyCustomerController controller = new View_Controller.ModifyCustomerController(selectedCustomer, isNewCustomer);
         loader.setController(controller);
         Parent root = loader.load();
-        //ModifyCustomerController controller = loader.getController();
-        stage.setTitle("Update Customer");
+        if(isNewCustomer) {
+            stage.setTitle("Add Customer");
+        }
+        else {
+            stage.setTitle("Update Customer");
+        }
         stage.setScene(new Scene(root));
         stage.show();
     }

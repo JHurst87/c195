@@ -61,6 +61,31 @@ public class CustomerDaoImpl {
         return "";
     }
 
+    public static int create(Customer customer){
+        String query = String.join(" ",
+                "INSERT INTO customer (customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy)",
+                "VALUES",
+                "(?, ?, 1, NOW(), 'test', NOW(), 'test')"
+        );
+
+        try{
+            String generatedColumns[] = {"customerId"};
+            PreparedStatement ps = conn.prepareStatement(query, generatedColumns);
+            ps.setString(1, customer.getCustomerName());
+            ps.setInt(2, customer.getAddress().getAddressId());
+
+            ps.executeUpdate();
+
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if(generatedKeys.next()){
+                return generatedKeys.getInt(1);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return 0;
+    }
+
     public static Customer getById(int customerId){
 
         Customer customer = new Customer();
@@ -75,7 +100,6 @@ public class CustomerDaoImpl {
             if(rs.next()){
                 customer.setCustomerId(rs.getInt("customerId"));
                 customer.setCustomerName(rs.getString("customerName"));
-                customer.setAddressId(rs.getInt("addressId"));
                 customer.setActive(rs.getBoolean("active"));
                 return customer;
             }
@@ -99,7 +123,26 @@ public class CustomerDaoImpl {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
 
+    public static void update(Customer customer){
+        String query = String.join(" ",
+                "UPDATE customer",
+                "SET customerName=?,",
+                "addressId=?",
+                "lastUpdate=NOW(),",
+                "lastUpdateBy='test'",
+                "WHERE customerId=?"
+                );
 
+        try{
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, customer.getCustomerName());
+            ps.setInt(2, customer.getAddress().getAddressId());
+            ps.setInt(3, customer.getCustomerId());
+            ps.execute();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }

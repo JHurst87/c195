@@ -1,7 +1,9 @@
 package DAO;
 
+import Main.AppointmentApp;
 import Model.City;
 import Model.Country;
+import com.mysql.cj.protocol.Resultset;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import utils.DBConnection;
@@ -13,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CityDaoImpl {
+    public final static Connection conn = AppointmentApp.conn;
     public CityDaoImpl(){
     }
 
@@ -40,6 +43,7 @@ public class CityDaoImpl {
             Connection conn = DBConnection.startConnection();
             DBQuery.setPrepareStatement(conn, query);
             PreparedStatement ps = DBQuery.getPreparedStatement();
+
             ps.setInt(1, cityId);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
@@ -56,5 +60,50 @@ public class CityDaoImpl {
             throwables.printStackTrace();
         }
         return city;
+    }
+
+    public static int create(City city){
+        String query = String.join(" ","INSERT INTO city",
+                "(city, countryId, createDate, createdBy, lastUpdate, lastUpdateBy)",
+                "VALUES (?, ?, NOW(), 'test', NOW(), 'test')"
+        );
+
+        try{
+            String generatedColumns[] = {"cityId"};
+            PreparedStatement ps = conn.prepareStatement(query, generatedColumns);
+            ps.setString(1, city.getCityName());
+            ps.setInt(2, city.getCountry().getCountryId());
+            ps.executeUpdate();
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if(generatedKeys.next()){
+                System.out.println("Genearated Columns: " +generatedKeys.getInt(1));
+                return generatedKeys.getInt(1);
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    public static void update(City city, Country country){
+        String query = String.join(" ",
+                "UPDATE city",
+                "SET city=?,",
+                "countryId=?,",
+                "lastUpdate=NOW(),",
+                "lastUpdateBy='test'",
+                "WHERE cityId=?"
+        );
+        try{
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, city.getCityName());
+            ps.setInt(2, city.getCountry().getCountryId());
+            ps.setInt(3, city.getCityId());
+            ps.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }
