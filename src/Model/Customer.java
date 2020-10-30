@@ -24,6 +24,10 @@ public class Customer {
         this.address = address;
     }
 
+    public boolean isValid(){
+        return this.customerId != 0 && this.customerName != "" && this.address.getAddressId() != 0;
+    }
+
     public int getCustomerId(){
         return this.customerId;
     }

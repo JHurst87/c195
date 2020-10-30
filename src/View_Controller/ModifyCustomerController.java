@@ -85,7 +85,6 @@ public class ModifyCustomerController implements Initializable {
 
     @FXML
     public void onActionSave(ActionEvent event){
-        System.out.println("Save!");
 
         // GUI values
         String customerNameText = nameField.getText();
@@ -95,38 +94,51 @@ public class ModifyCustomerController implements Initializable {
         String postalCodeText = postalCodeField.getText();
         Country modifiedCountry = countryField.getSelectionModel().getSelectedItem();
         String phoneText = phoneField.getText();
+
         // Detect if new customer or Existing customer
         if(!isNewCustomer){
             Address modifiedAddress = this.customer.getAddress();
             City modifiedCity = modifiedAddress.getCity();
-
             City city = modifiedCityHandler(modifiedCity.getCityId(), cityText, modifiedCountry);
             Address address = modifyAddressHandler(modifiedAddress.getAddressId(), addressText, address2Text, city, postalCodeText, phoneText);
-
-
-            try{
-                if(address.isValid()){
-                    //Display
-                    Customer customer = modifyCustomerHandler(this.customer.getCustomerId(), customerNameText, address);
-                    System.out.println("Successfully Updated Customer!");
-                }else{
-                    //Create Error messages
-                    System.out.println("There were errors!");
+            if(city.isValid() && address.isValid()){
+                try{
+                    if(address.isValid()){
+                        //Display
+                        Customer customer = modifyCustomerHandler(this.customer.getCustomerId(), customerNameText, address);
+                        System.out.println("Successfully Updated Customer!");
+                        displayCustomerScreen(event);
+                    }else{
+                        //Create Error messages
+                        System.out.println("There were errors!");
+                        alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setContentText("Customer Data Validation Errors");
+                        alert.setTitle("Invalid Customer Data");
+                        alert.show();
+                    }
                 }
-            }
-            catch(Exception e){
-                e.printStackTrace();
+                catch(Exception e){
+                    e.printStackTrace();
+                }
             }
         } else {
             //New Customer and NO ID exists
             City city = addCityHandler(cityText, modifiedCountry);
             Address address = addAddressHandler(addressText, address2Text, postalCodeText, city ,phoneText );
             Customer customer = addCustomerHandler(customerNameText, address);
-
-            if(customer.getCustomerId() != 0){
-                System.out.println("Add New Customer!");
+            if(city.isValid() && address.isValid() && customer.isValid()){
+                if(customer.getCustomerId() != 0){
+                    System.out.println("Add New Customer!");
+                    displayCustomerScreen(event);
+                }
+            } else {
+                //Create Error messages
+                System.out.println("There were errors!");
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Customer Data Validation Errors");
+                alert.setTitle("Invalid Customer Data");
+                alert.show();
             }
-
         }
 
     }

@@ -17,6 +17,10 @@ public class City {
         this.country = country;
     }
 
+    public boolean isValid(){
+        return this.cityId != 0 && this.cityName != "" && this.country.getCountryId() != 0;
+    }
+
     public int getCityId() {
         return cityId;
     }
