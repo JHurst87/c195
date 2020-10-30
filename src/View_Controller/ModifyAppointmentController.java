@@ -109,10 +109,12 @@ public class ModifyAppointmentController implements Initializable {
         apptStartHours.setItems(hours);
         apptStartMinutes.setItems(minutes);
         apptStartAMPM.setItems(amPm);
+        apptStartAMPM.getSelectionModel().selectFirst();
 
         apptEndHours.setItems(hours);
         apptEndMinutes.setItems(minutes);
         apptEndAMPM.setItems(amPm);
+        apptEndAMPM.getSelectionModel().selectFirst();
 
         if(!isNewAppointment){
             apptCustomerComboBox.getSelectionModel().select(this.appointment.getCustomer());

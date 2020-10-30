@@ -36,45 +36,67 @@ public class AppointmentDaoImpl {
         return appointment;
     }
 
-    public static ObservableList<Appointment> getAppointmentsThisMonth() throws SQLException {
-        //String selectQuery = "SELECT * FROM appointment WHERE start BETWEEN ? AND  ?";
-        ObservableList<Appointment> apptsThisMonth = FXCollections.observableArrayList();
-        String selectQuery = "SELECT * FROM appointment";
-        DBQuery.setPrepareStatement(conn, selectQuery);
-        PreparedStatement ps = DBQuery.getPreparedStatement();
-
-        ResultSet rs = ps.executeQuery();
-
-//        while(rs.next()){
-////            Appointment appointment = new Appointment(
-////                    rs.getInt("appointmentId"),
-////                    rs.getInt("customerId"),
-////                    rs.getInt("userId"),
-////                    rs.getString("title"),
-////                    rs.getString("description"),
-////                    rs.getString("location"),
-////                    rs.getString("contact"),
-////                    rs.getString("type"),
-////                    rs.getString("url"),
-////                    rs.getString("start"),
-////                    rs.getString("end"),
-////                    );
-//            apptsThisMonth.add(appointment);
-//        }
-
-        return apptsThisMonth;
-    }
-
     public static ObservableList<Appointment> getAppointmentsThisWeek() {
         ObservableList<Appointment> apptsThisWeek = FXCollections.observableArrayList();
         return apptsThisWeek;
+    }
+
+    public static ObservableList<Appointment> getByDateRange(LocalDateTime start, LocalDateTime end){
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+
+        String query = String.join(" ",
+                "SELECT * FROM appointment",
+                "WHERE start >= ? AND end <= ? ORDER BY start ASC"
+        );
+
+        try{
+            PreparedStatement ps = conn.prepareStatement(query);
+
+            ZoneId zone = ZoneId.systemDefault();
+            LocalDateTime startDateTime = start.atZone(zone).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
+            LocalDateTime endDateTime = end.atZone(zone).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
+
+            ps.setTimestamp(1, Timestamp.valueOf(startDateTime));
+            ps.setTimestamp(2, Timestamp.valueOf(endDateTime));
+
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                Appointment appointment = new Appointment();
+                appointment.setAppointmentId(rs.getInt("appointmentId"));
+                appointment.setAppointmentId(rs.getInt("appointmentId"));
+                appointment.setUserId(rs.getInt("userId"));
+                appointment.setTitle(rs.getString("title"));
+                appointment.setDescription(rs.getString("description"));
+                appointment.setLocation(rs.getString("location"));
+                appointment.setContact(rs.getString("contact"));
+                appointment.setType(rs.getString("type"));
+                appointment.setUrl(rs.getString("url"));
+
+                LocalDateTime startTimeUTC = rs.getTimestamp("start").toLocalDateTime();
+                LocalDateTime endTimeUTC = rs.getTimestamp("end").toLocalDateTime();
+                LocalDateTime startTimeLocal = startTimeUTC.atZone(ZoneOffset.UTC).withZoneSameInstant(zone).toLocalDateTime();
+                LocalDateTime endTimeLocal = endTimeUTC.atZone(ZoneOffset.UTC).withZoneSameInstant(zone).toLocalDateTime();
+
+                appointment.setStart(startTimeLocal);
+                appointment.setEnd(endTimeLocal);
+
+                appointment.setCustomer(CustomerDaoImpl.getById(rs.getInt("customerId")));
+
+                appointments.add(appointment);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return appointments;
     }
     
     public static ObservableList<Appointment> getAll(){
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
         String query = String.join(" ",
-                "SELECT * FROM appointment"
+                "SELECT * FROM appointment ORDER BY start ASC"
         );
 
         try{

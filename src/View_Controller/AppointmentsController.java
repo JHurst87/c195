@@ -9,17 +9,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.*;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.*;
-import utils.DBConnection;
 import DAO.AppointmentDaoImpl;
 
 import javafx.event.ActionEvent;
+
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Optional;
@@ -33,6 +34,10 @@ public class AppointmentsController implements Initializable{
     private Appointment selectedApppointment;
     private DateTimeFormatter appointmentTimeFormat = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
     public String currentView = "monthly";
+    public YearMonth theMonth;
+    public LocalDate theWeek;
+    public static final int DAYS_IN_WEEK = 7;
+
 
     //Appointments
 
@@ -46,8 +51,49 @@ public class AppointmentsController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //Load Appointments by Month View (default)
+
+
+        theMonth = YearMonth.now();
+
+        LocalDate now = LocalDate.now();
+        int weekOffset = now.getDayOfWeek().getValue() % DAYS_IN_WEEK;
+
+        theWeek = now.minusDays(weekOffset);
+
+        setValues();
+        thisMonth(); //Load Appointments by Month View (default)
+    }
+
+    public void onActionThisMonth(ActionEvent event){
+        // Show this month's appointments from day 1 to day 30/31/28 depending on the month
+        thisMonth();
+    }
+
+    private void thisWeek(){
+        LocalDate lastDayOfNextWeek = theWeek.plusWeeks(1);
+        LocalDateTime startWKDateTime = LocalDateTime.of(this.theWeek, LocalTime.MIDNIGHT);//Start of this week
+        LocalDateTime endWKDateTime = LocalDateTime.of(lastDayOfNextWeek, LocalTime.MAX); //End of next week
+
+        appointments = AppointmentDaoImpl.getByDateRange(startWKDateTime, endWKDateTime);
+        setAppointmentsTableView(appointments);
+    }
+
+    private void thisMonth(){
+        LocalDate firstDay = theMonth.atDay(1);
+        LocalDate lastDay  = theMonth.atEndOfMonth();
+        LocalDateTime startDT = LocalDateTime.of(firstDay, LocalTime.MIDNIGHT); // First day of the target month
+        LocalDateTime endDT = LocalDateTime.of(lastDay,LocalTime.MAX);//End of the Day for that month
+
+        appointments = AppointmentDaoImpl.getByDateRange(startDT, endDT);
+        setAppointmentsTableView(appointments);
+    }
+
+    private void showAll() {
         appointments = AppointmentDaoImpl.getAll();
+        setAppointmentsTableView(appointments);
+    }
+
+    private void setValues(){
         // Set values using a Lambda function to help display strings from the embedded classes/properties
         customerNameCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getCustomer().getCustomerName()));
         titleCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getTitle()));
@@ -55,7 +101,21 @@ public class AppointmentsController implements Initializable{
         typeCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getType()));
         startCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getStart().format(appointmentTimeFormat)));
         endCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getEnd().format(appointmentTimeFormat)));
+    }
+
+    private void setAppointmentsTableView(ObservableList<Appointment> appointments){
         appointmentsTableView.setItems(appointments);
+        //appointmentsTableView.refresh();
+    }
+
+    public void onActionThisWeek(ActionEvent event){
+        System.out.println("Show Only This week's appointments!");
+        thisWeek();
+    }
+
+    public void onActionShowAll(ActionEvent event){
+        System.out.println("Show All appointments!");
+        showAll();
     }
 
     public void onActionAdd(ActionEvent event){
@@ -110,7 +170,6 @@ public class AppointmentsController implements Initializable{
                 if(option.isPresent() && option.get() == ButtonType.OK) {
                     AppointmentDaoImpl.delete(selectedApppointment);
                     System.out.println("Delete and update view!");
-                    setAppointmentTableView();
                 }
             }
         }
@@ -121,11 +180,6 @@ public class AppointmentsController implements Initializable{
             alert.show();
         }
 
-    }
-
-    private void setAppointmentTableView() {
-        ObservableList<Appointment> appointments = AppointmentDaoImpl.getAll();
-        appointmentsTableView.setItems(appointments);
     }
 
     public void onActionReturn(ActionEvent event){
