@@ -1,33 +1,16 @@
 package Model;
 
-import utils.DBQuery;
-
-import java.util.Calendar;
-
 public class User {
     String name;
     int userId;
-    String password;
-    Boolean active;
-    Calendar createDate;
-    String createdBy;
-    Calendar lastUpdate;
-    String lastUpdatedBy;
 
     public User(){
 
     }
 
-    public User(int userId, String name, String password, boolean active, Calendar createDate, String createdBy, Calendar lastUpdate, String lastUpdatedBy) {
+    public User(int userId, String name) {
         this.userId = userId;
         this.name = name;
-        this.password = password;
-        this.active = active;
-        this.createDate = createDate;
-        this.lastUpdate = lastUpdate;
-        this.lastUpdatedBy = lastUpdatedBy;
-
-
     }
 
     public int getUserId(){
@@ -44,5 +27,9 @@ public class User {
 
     public void setName(String name){
         this.name = name;
+    }
+
+    public String toString(){
+        return this.name;
     }
 }

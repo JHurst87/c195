@@ -1,8 +1,10 @@
 package View_Controller;
 
 import DAO.CustomerDaoImpl;
+import DAO.UserDaoImpl;
 import Model.Appointment;
 import Model.Customer;
+import Model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -29,6 +31,7 @@ public class ModifyAppointmentController implements Initializable {
     private Appointment appointment;
     private Boolean isNewAppointment = false;
     private ObservableList<Customer> customers;
+    private ObservableList<User> users;
     private DateTimeFormatter appointmentTimeFormat = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
     private DateTimeFormatter appointmentHourFormatter = DateTimeFormatter.ofPattern("hh");
     private DateTimeFormatter appointmentMinuteFormatter = DateTimeFormatter.ofPattern("mm");
@@ -43,7 +46,7 @@ public class ModifyAppointmentController implements Initializable {
     @FXML
     private TextField apptTitle;
     @FXML
-    private TextField apptContact;
+    private ComboBox<User> apptContact;
     @FXML
     private TextField apptURL;
     @FXML
@@ -74,6 +77,7 @@ public class ModifyAppointmentController implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
         this.customers = CustomerDaoImpl.getAll();
+        this.users = UserDaoImpl.getAll();
 
         this.hours = FXCollections.observableArrayList(
                 "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"
@@ -86,7 +90,7 @@ public class ModifyAppointmentController implements Initializable {
         apptCustomerComboBox.setItems(this.customers);
         apptDescription.setText(this.appointment.getDescription());
         apptTitle.setText(this.appointment.getTitle());
-        apptContact.setText(this.appointment.getContact());
+        apptContact.setItems(this.users);
         apptURL.setText(this.appointment.getUrl());
         apptLocation.setText(this.appointment.getLocation());
         apptDate.setValue(LocalDate.now());

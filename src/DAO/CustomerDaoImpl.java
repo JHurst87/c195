@@ -25,7 +25,6 @@ public class CustomerDaoImpl {
 
             while(rs.next()) {
                 //Create Customer
-                System.out.println("Getting customer with id:" + rs.getInt("customerId"));
                 Customer customer = new Customer(
                     rs.getInt("customerId"),
                     rs.getString("customerName"),
@@ -33,8 +32,6 @@ public class CustomerDaoImpl {
                     rs.getBoolean("active"),
                     AddressDaoImpl.getById(rs.getInt("addressId"))
                 );
-
-                System.out.println("Getting address with id:" + rs.getInt("addressId"));
 
                 customers.add(customer);
             }

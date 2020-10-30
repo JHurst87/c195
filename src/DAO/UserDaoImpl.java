@@ -39,4 +39,25 @@ public class UserDaoImpl {
 
         return "";
     }
+
+    public static ObservableList<User> getAll(){
+        ObservableList<User> users = FXCollections.observableArrayList();
+        String query = "SELECT * FROM user WHERE active=1";
+
+        try{
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                User user = new User();
+                user.setUserId(rs.getInt("userId"));
+                user.setName(rs.getString("userName"));
+                users.add(user);
+            }
+            return users;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return users;
+    }
 }

@@ -61,11 +61,13 @@ public class AppointmentsController implements Initializable{
     public void onActionAdd(ActionEvent event){
         System.out.println("Add Appointment");
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/AddAppointment.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/ModifyAppointment.fxml"));
+        View_Controller.ModifyAppointmentController controller = new ModifyAppointmentController(new Appointment(), true);
+        loader.setController(controller);
         Parent root = null;
         try {
             root = loader.load();
-            stage.setTitle("Add Appointment(s)");
+            stage.setTitle("Add Appointment");
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {

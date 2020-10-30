@@ -17,9 +17,9 @@
       </Label>
       <AnchorPane layoutX="22.0" layoutY="43.0" prefHeight="364.0" prefWidth="436.0">
          <children>
-            <ComboBox fx:id="apptCustomerComboBox" layoutY="8.0" prefHeight="45.0" prefWidth="436.0" promptText="Customer" />
+            <ComboBox fx:id="apptCustomerComboBox" layoutY="8.0" prefHeight="45.0" prefWidth="436.0" promptText="Choose a Customer" />
             <TextField fx:id="apptTitle" layoutY="111.0" prefHeight="45.0" prefWidth="436.0" promptText="Title" />
-            <TextField fx:id="apptContact" layoutY="162.0" prefHeight="45.0" prefWidth="436.0" promptText="Contact" />
+            <ComboBox fx:id="apptContact" layoutY="162.0" prefHeight="45.0" prefWidth="436.0" promptText="Choose a Consultant" />
             <TextField fx:id="apptURL" layoutY="214.0" prefHeight="45.0" prefWidth="436.0" promptText="URL" />
             <TextField fx:id="apptLocation" layoutY="266.0" prefHeight="45.0" prefWidth="436.0" promptText="Location" />
             <DatePicker fx:id="apptDate" layoutY="320.0" prefHeight="45.0" prefWidth="436.0" promptText="Date" />
