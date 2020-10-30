@@ -1,18 +1,15 @@
 package Model;
 
-import DAO.CustomerDaoImpl;
-import utils.DBConnection;
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import Exception.AppointmentException;
 
 public class Appointment {
     private int appointmentId;
-    private User user;
+    private int userId;
+    private String contact;
     private String title;
     private String description;
     private String location;
-    private String contact;
     private Customer customer;
     private String type;
     private String url;
@@ -21,41 +18,41 @@ public class Appointment {
 
     public Appointment() {
         this.appointmentId = 0;
+        this.userId = 0;
+        this.contact = "";
         this.title = "";
         this.description = "";
         this.location = "";
-        this.contact = "";
         this.type = "";
         this.url = "";
         this.start = null;
         this.end = null;
-        this.user = null;
         this.customer = null;
     }
 
     public Appointment(
             int appointmentId,
+            int userId,
             String title,
+            String contact,
             String description,
             String location,
-            String contact,
             String type,
             String url,
             LocalDateTime start,
             LocalDateTime end,
-            User user,
             Customer customer
     ){
         this.appointmentId = appointmentId;
+        this.userId = userId;
         this.title = title;
         this.description = description;
         this.location = location;
-        this.contact = contact;
         this.type = type;
         this.url = url;
         this.start = start;
         this.end = end;
-        this.user = user;
+        this.contact = contact;
         this.customer = customer;
     }
 
@@ -139,47 +136,49 @@ public class Appointment {
         this.customer = customer;
     }
 
-    public User getUser(){
-        return this.user;
-    }
-
-    public void setUser(User user){
-        this.user = user;
-    }
-
-    public boolean isValid(){
+    public boolean isValid() throws AppointmentException {
         if(this.customer == null){
-            return false;
+            throw new AppointmentException("Customer choice is required.");
         }
 
         if(this.title.equals("")){
-            return false;
+            throw new AppointmentException("Title is required.");
         }
 
         if(this.description.equals("")){
-            return false;
+            throw new AppointmentException("Title is required.");
         }
 
         if (this.location.equals("")) {
-            return false;
+            throw new AppointmentException("Location is required.");
         }
 
         if (this.contact.equals("")) {
-            return false;
+            throw new AppointmentException("Consultant is required.");
         }
 
         if (this.url.equals("")) {
-            return false;
+            throw new AppointmentException("URL is required.");
         }
 
         if (this.start == null) {
-            return false;
+            throw new AppointmentException("Start time is required.");
         }
 
         if (this.end == null) {
-            return false;
+            throw new AppointmentException("End time is required.");
         }
 
+
+
         return true;
+    }
+
+    public int getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

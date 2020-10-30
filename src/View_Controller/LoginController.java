@@ -41,7 +41,7 @@ public class LoginController implements Initializable {
     public final static Connection conn = AppointmentApp.conn;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        activeLanguage = ResourceBundle.getBundle("AppointmentApp/i18n/rb");
+        activeLanguage = ResourceBundle.getBundle("i18n/rb");
         loginLabel.setText(activeLanguage.getString("login"));
         usernameField.setText(activeLanguage.getString("username"));
         passwordField.setText(activeLanguage.getString("password"));
@@ -68,10 +68,12 @@ public class LoginController implements Initializable {
             if(rs.next() && rs.getInt("userID") > 0){
                 //Get User
 
-                AppointmentApp.user = UserDaoImpl.getById(rs.getInt("userId"));
+                AppointmentApp.user = new User(1, "test");
                 // Change stage
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("View_Controller/MainScreen.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/MainScreen.fxml"));
+                View_Controller.MainScreenController controller = new View_Controller.MainScreenController();
+                loader.setController(controller);
                 Parent root = loader.load();
                 stage.setTitle("Appointment App");
                 stage.setScene(new Scene(root));

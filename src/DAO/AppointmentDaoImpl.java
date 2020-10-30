@@ -33,7 +33,6 @@ public class AppointmentDaoImpl {
                 appointment.setStart(rs.getTimestamp("start").toLocalDateTime());
                 appointment.setEnd(rs.getTimestamp("end").toLocalDateTime());
                 appointment.setCustomer(CustomerDaoImpl.getById(rs.getInt("customerId")));
-                appointment.setUser(UserDaoImpl.getById(rs.getInt("userId")));
         return appointment;
     }
 
@@ -86,6 +85,7 @@ public class AppointmentDaoImpl {
                 Appointment rsAppointment = new Appointment();
 
                 rsAppointment.setAppointmentId(rs.getInt("appointmentId"));
+                rsAppointment.setUserId(rs.getInt("userId"));
                 rsAppointment.setTitle(rs.getString("title"));
                 rsAppointment.setDescription(rs.getString("description"));
                 rsAppointment.setLocation(rs.getString("location"));
@@ -123,7 +123,7 @@ public class AppointmentDaoImpl {
         try{
             PreparedStatement ps = conn.prepareStatement(query, generatedColumns);
             ps.setInt(1, appointment.getCustomer().getCustomerId());
-            ps.setInt(2, appointment.getUser().getUserId());
+            ps.setInt(2, appointment.getUserId());
             ps.setString(3, appointment.getTitle());
             ps.setString(4, appointment.getDescription());
             ps.setString(5, appointment.getLocation());
@@ -166,13 +166,14 @@ public class AppointmentDaoImpl {
                 "start=?,",
                 "end=?,",
                 "lastUpdate=NOW(),",
-                "lastUpdateBy='test'"
+                "lastUpdateBy='test'",
+                "WHERE appointmentId=?"
         );
 
         try{
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, appointment.getCustomer().getCustomerId());
-            ps.setInt(2, appointment.getUser().getUserId());
+            ps.setInt(2, appointment.getUserId());
             ps.setString(3, appointment.getTitle());
             ps.setString(4, appointment.getDescription());
             ps.setString(5, appointment.getLocation());
@@ -186,6 +187,7 @@ public class AppointmentDaoImpl {
 
             ps.setTimestamp(9, Timestamp.valueOf(startTimeUTC));
             ps.setTimestamp(10, Timestamp.valueOf(endTimeUTC));
+            ps.setInt(11,appointment.getAppointmentId());
 
             int affectedRows = ps.executeUpdate();
 

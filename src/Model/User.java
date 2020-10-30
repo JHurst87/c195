@@ -5,7 +5,8 @@ public class User {
     int userId;
 
     public User(){
-
+        this.userId = 0;
+        this.name = "";
     }
 
     public User(int userId, String name) {

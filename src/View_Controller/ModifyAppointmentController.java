@@ -1,8 +1,10 @@
 package View_Controller;
 
+import Exception.AppointmentTimeException;
 import DAO.AppointmentDaoImpl;
 import DAO.CustomerDaoImpl;
 import DAO.UserDaoImpl;
+import Main.AppointmentApp;
 import Model.Appointment;
 import Model.Customer;
 import Model.User;
@@ -50,7 +52,7 @@ public class ModifyAppointmentController implements Initializable {
     @FXML
     private TextField apptTitle;
     @FXML
-    private ComboBox<User> apptContactComboBox;
+    private TextField apptContact;
     @FXML
     private ComboBox<String> apptTypeComboBox;
     @FXML
@@ -96,7 +98,7 @@ public class ModifyAppointmentController implements Initializable {
         apptCustomerComboBox.setItems(this.customers);
         apptDescription.setText(this.appointment.getDescription());
         apptTitle.setText(this.appointment.getTitle());
-        apptContactComboBox.setItems(this.users);
+        apptContact.setText(this.appointment.getContact());
         apptURL.setText(this.appointment.getUrl());
         apptLocation.setText(this.appointment.getLocation());
         apptDate.setValue(LocalDate.now());
@@ -115,6 +117,8 @@ public class ModifyAppointmentController implements Initializable {
         if(!isNewAppointment){
             apptCustomerComboBox.getSelectionModel().select(this.appointment.getCustomer());
             apptDate.setValue(this.appointment.getStart().toLocalDate());
+            apptContact.setText(this.appointment.getContact());
+            apptTypeComboBox.getSelectionModel().select(this.appointment.getType());
 
             System.out.println("Start: " + this.appointment.getStart().format(appointmentTimeFormat));
             apptStartHours.getSelectionModel().select((this.appointment.getStart().format(appointmentHourFormatter)));
@@ -137,55 +141,72 @@ public class ModifyAppointmentController implements Initializable {
 
     public void onActionSave(ActionEvent event) throws IOException {
         System.out.println("Save/Edit Appointment");
-        // Get user form input
-
-        Customer newCustomer = apptCustomerComboBox.getValue();
-        String newLocation = apptLocation.getText();
-        String newTitle = apptTitle.getText();
-        String newURL = apptURL.getText();
-        User newContact = apptContactComboBox.getValue();
-        String newDesc = apptDescription.getText();
-
-        //Create DateTime Objects
-
-        LocalDate newDate = apptDate.getValue();
-
-        String newStartHours = apptStartHours.getValue();
-        String newStartMinutes = apptStartMinutes.getValue();
-        String newStartAMPM = apptStartAMPM.getValue();
-
-        String newStartTime = newStartHours + ":" + newStartMinutes + " " + newStartAMPM;
-
-        String newEndHours = apptEndHours.getValue();
-        String newEndMinutes = apptEndMinutes.getValue();
-        String newEndAMPM = apptEndAMPM.getValue();
-
-        String newEndTime = newEndHours + ":" + newEndMinutes + " " + newEndAMPM;
-
-        LocalDateTime newStartDateTime = LocalDateTime.of(newDate, LocalTime.parse(newStartTime, appointmentTimeFullFormat));
-        LocalDateTime newEndDateTime = LocalDateTime.of(newDate, LocalTime.parse(newEndTime, appointmentTimeFullFormat));
-
         try{
+            Customer newCustomer = apptCustomerComboBox.getValue();
+            String newLocation = apptLocation.getText();
+            String newTitle = apptTitle.getText();
+            String newURL = apptURL.getText();
+            String newContact = apptContact.getText();
+            String newDesc = apptDescription.getText();
+
+            //Create DateTime Objects
+
+            LocalDate newDate = apptDate.getValue();
+
+            String newStartHours = apptStartHours.getValue();
+            String newStartMinutes = apptStartMinutes.getValue();
+            String newStartAMPM = apptStartAMPM.getValue();
+
+            String newStartTime = newStartHours + ":" + newStartMinutes + " " + newStartAMPM;
+
+            String newEndHours = apptEndHours.getValue();
+            String newEndMinutes = apptEndMinutes.getValue();
+            String newEndAMPM = apptEndAMPM.getValue();
+
+            String newEndTime = newEndHours + ":" + newEndMinutes + " " + newEndAMPM;
+
+            if(newDate == null || newStartTime.isEmpty() || newEndTime.isEmpty() ){
+                throw new AppointmentTimeException("Please select a valid date and time");
+            }
+
+            LocalDateTime newStartDateTime = LocalDateTime.of(newDate, LocalTime.parse(newStartTime, appointmentTimeFullFormat));
+            LocalDateTime newEndDateTime = LocalDateTime.of(newDate, LocalTime.parse(newEndTime, appointmentTimeFullFormat));
+
             Appointment appointment = new Appointment();
+            appointment.setUserId(AppointmentApp.user.getUserId());
             appointment.setCustomer(apptCustomerComboBox.getValue());
-            appointment.setUser(apptContactComboBox.getValue());
+            appointment.setContact(apptContact.getText());
             appointment.setTitle(apptTitle.getText());
             appointment.setDescription(apptDescription.getText());
             appointment.setLocation(apptLocation.getText());
-            appointment.setContact(apptContactComboBox.getValue().getName());
             appointment.setType(apptTypeComboBox.getValue());
             appointment.setUrl(apptURL.getText());
             appointment.setStart(newStartDateTime);
             appointment.setEnd(newEndDateTime);
 
-            if(appointment.isValid()){
-                appointment.setAppointmentId(AppointmentDaoImpl.create(appointment));
-                View_Controller.AppointmentsController controller = new AppointmentsController();
-                showScreen("/View_Controller/Appointments.fxml", "Appointments", event, controller);
+            if(!isNewAppointment){
+                //Update Existing appointment
+                if(appointment.isValid()){
+                    appointment.setAppointmentId(this.appointment.getAppointmentId());
+                    AppointmentDaoImpl.update(appointment);
+                    View_Controller.AppointmentsController controller = new AppointmentsController();
+                    showScreen("/View_Controller/Appointments.fxml", "Appointments", event, controller);
+                } else {
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Invalid Appointment");
+                    alert.show();
+                }
             } else {
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText("Invalid Appointment");
-                alert.show();
+
+                if(appointment.isValid()){
+                    appointment.setAppointmentId(AppointmentDaoImpl.create(appointment));
+                    View_Controller.AppointmentsController controller = new AppointmentsController();
+                    showScreen("/View_Controller/Appointments.fxml", "Appointments", event, controller);
+                } else {
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Invalid Appointment");
+                    alert.show();
+                }
             }
         }
         catch (Exception e) {
@@ -206,9 +227,14 @@ public class ModifyAppointmentController implements Initializable {
         stage.show();
     }
 
-    private Boolean isValid(){
-
+    private boolean isValid(){
 
         return true;
     }
+
+    private void setUserInput(){
+
+    }
+
+
 }

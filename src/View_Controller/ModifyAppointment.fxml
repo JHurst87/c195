@@ -14,7 +14,7 @@
          <children>
             <ComboBox fx:id="apptCustomerComboBox" layoutY="8.0" prefHeight="45.0" prefWidth="436.0" promptText="Choose a Customer" />
             <TextField fx:id="apptTitle" layoutY="111.0" prefHeight="45.0" prefWidth="436.0" promptText="Title" />
-            <ComboBox fx:id="apptContactComboBox" layoutY="162.0" prefHeight="45.0" prefWidth="436.0" promptText="Choose a Consultant" />
+            <TextField fx:id="apptContact" layoutY="162.0" prefHeight="45.0" prefWidth="436.0" promptText="Choose a Consultant" />
             <TextField fx:id="apptURL" layoutY="279.0" prefHeight="45.0" prefWidth="436.0" promptText="URL" />
             <TextField fx:id="apptLocation" layoutY="331.0" prefHeight="45.0" prefWidth="436.0" promptText="Location" />
             <DatePicker fx:id="apptDate" layoutY="385.0" prefHeight="45.0" prefWidth="436.0" promptText="Date" />

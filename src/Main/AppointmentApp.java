@@ -17,10 +17,10 @@ public class AppointmentApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         System.out.println("Started!");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/MainScreen.fxml"));
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/Login.fxml"));
-//        //View_Controller.LoginController controller = new View_Controller.LoginController();
-        View_Controller.MainScreenController controller = new View_Controller.MainScreenController();
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/MainScreen.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/Login.fxml"));
+        View_Controller.LoginController controller = new View_Controller.LoginController();
+//        View_Controller.MainScreenController controller = new View_Controller.MainScreenController();
         loader.setController(controller);
         Parent root = loader.load();
         primaryStage.setTitle("Appointment Management App");
