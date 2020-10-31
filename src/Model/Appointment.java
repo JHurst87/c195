@@ -1,7 +1,11 @@
 package Model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import Exception.AppointmentException;
+import Exception.AppointmentTimeException;
 
 public class Appointment {
     private int appointmentId;
@@ -15,6 +19,8 @@ public class Appointment {
     private String url;
     private LocalDateTime start;
     private LocalDateTime end;
+    private static final int OPEN_TIME = 9;
+    private static final int CLOSE_TIME = 17;
 
     public Appointment() {
         this.appointmentId = 0;
@@ -138,7 +144,7 @@ public class Appointment {
 
     public boolean isValid() throws AppointmentException {
         if(this.customer == null){
-            throw new AppointmentException("Customer choice is required.");
+            throw new AppointmentException("Please select a customer.");
         }
 
         if(this.title.equals("")){
@@ -146,19 +152,23 @@ public class Appointment {
         }
 
         if(this.description.equals("")){
-            throw new AppointmentException("Title is required.");
-        }
-
-        if (this.location.equals("")) {
-            throw new AppointmentException("Location is required.");
+            throw new AppointmentException("Description is required.");
         }
 
         if (this.contact.equals("")) {
-            throw new AppointmentException("Consultant is required.");
+            throw new AppointmentException("Consultant/Contact is required.");
+        }
+
+        if(this.type.equals("")){
+            throw new AppointmentException("Type is required.");
         }
 
         if (this.url.equals("")) {
             throw new AppointmentException("URL is required.");
+        }
+
+        if (this.location.equals("")) {
+            throw new AppointmentException("Location is required.");
         }
 
         if (this.start == null) {
@@ -169,9 +179,7 @@ public class Appointment {
             throw new AppointmentException("End time is required.");
         }
 
-
-
-        return true;
+        return isValidTime();
     }
 
     public int getUserId() {
@@ -180,5 +188,42 @@ public class Appointment {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public boolean isValidTime() throws AppointmentTimeException {
+        /*
+        Time validation
+        Rules:
+        1. Appointment can be only made Monday through Saturday
+        2. Appointment can only be held on 1 day, aka no spanning multiple days.
+        3. Appointment can only be made during 9AM to 5PM Local Time
+        */
+        LocalTime midnight = LocalTime.MIDNIGHT;
+        LocalDate startDay = this.start.toLocalDate();
+        LocalDate endDay = this.end.toLocalDate();
+
+        int dayOfWeek = startDay.getDayOfWeek().getValue();
+
+        LocalTime startTime = this.start.toLocalTime();
+        LocalTime endTime = this.end.toLocalTime();
+
+        if(dayOfWeek == 0){
+            throw new AppointmentTimeException("Appointments cannot be scheduled on Sundays");
+        }
+
+        if(!startDay.isEqual(endDay)){
+            throw new AppointmentTimeException("Appointments must begin and end on the same day");
+        }
+
+
+        if( startTime.isBefore(midnight.plusHours(9)) || startTime.isAfter(midnight.plusHours(17)) ) {
+            throw new AppointmentTimeException("Appointment must be made AFTER 9AM and ON or BEFORE 5PM Local Time");
+        }
+
+        if( endTime.isAfter( midnight.plusHours(17) ) || endTime.isBefore(midnight.plusHours(9)) ){
+            throw new AppointmentTimeException("Appointment must be made BEFORE 5PM and ON or AFTER 9AM Local Time");
+        }
+
+        return true;
     }
 }

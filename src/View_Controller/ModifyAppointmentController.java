@@ -107,12 +107,20 @@ public class ModifyAppointmentController implements Initializable {
         //Time
 
         apptStartHours.setItems(hours);
+        apptStartHours.getSelectionModel().selectLast();
+
         apptStartMinutes.setItems(minutes);
+        apptStartMinutes.getSelectionModel().selectFirst();
+
         apptStartAMPM.setItems(amPm);
         apptStartAMPM.getSelectionModel().selectFirst();
 
         apptEndHours.setItems(hours);
+        apptEndHours.getSelectionModel().selectLast();
+
         apptEndMinutes.setItems(minutes);
+        apptEndMinutes.getSelectionModel().selectFirst();
+
         apptEndAMPM.setItems(amPm);
         apptEndAMPM.getSelectionModel().selectFirst();
 
@@ -199,7 +207,6 @@ public class ModifyAppointmentController implements Initializable {
                     alert.show();
                 }
             } else {
-
                 if(appointment.isValid()){
                     appointment.setAppointmentId(AppointmentDaoImpl.create(appointment));
                     View_Controller.AppointmentsController controller = new AppointmentsController();
@@ -212,11 +219,10 @@ public class ModifyAppointmentController implements Initializable {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText(e.getMessage());
+            alert.show();
         }
-
-
-
     }
 
     private void showScreen(String resource, String title, ActionEvent event, Object controller) throws IOException {

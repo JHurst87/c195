@@ -43,8 +43,6 @@ public class LoginController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         activeLanguage = ResourceBundle.getBundle("i18n/rb");
         loginLabel.setText(activeLanguage.getString("login"));
-        usernameField.setText(activeLanguage.getString("username"));
-        passwordField.setText(activeLanguage.getString("password"));
         loginButton.setText(activeLanguage.getString("login"));
     }
 

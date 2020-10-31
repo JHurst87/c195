@@ -1,9 +1,5 @@
 package Model;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 public class Customer {
     private int customerId;
     private String customerName;

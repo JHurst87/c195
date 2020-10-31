@@ -13,12 +13,12 @@
       <AnchorPane layoutX="22.0" layoutY="43.0" prefHeight="444.0" prefWidth="436.0">
          <children>
             <ComboBox fx:id="apptCustomerComboBox" layoutY="8.0" prefHeight="45.0" prefWidth="436.0" promptText="Choose a Customer" />
-            <TextField fx:id="apptTitle" layoutY="111.0" prefHeight="45.0" prefWidth="436.0" promptText="Title" />
-            <TextField fx:id="apptContact" layoutY="162.0" prefHeight="45.0" prefWidth="436.0" promptText="Choose a Consultant" />
+            <TextField fx:id="apptTitle" layoutY="59.0" prefHeight="45.0" prefWidth="436.0" promptText="Title" />
+            <TextField fx:id="apptContact" layoutY="162.0" prefHeight="45.0" prefWidth="436.0" promptText="Contact/Consultant" />
             <TextField fx:id="apptURL" layoutY="279.0" prefHeight="45.0" prefWidth="436.0" promptText="URL" />
             <TextField fx:id="apptLocation" layoutY="331.0" prefHeight="45.0" prefWidth="436.0" promptText="Location" />
             <DatePicker fx:id="apptDate" layoutY="385.0" prefHeight="45.0" prefWidth="436.0" promptText="Date" />
-            <TextField fx:id="apptDescription" layoutY="59.0" prefHeight="45.0" prefWidth="436.0" promptText="Description" />
+            <TextField fx:id="apptDescription" layoutY="111.0" prefHeight="45.0" prefWidth="436.0" promptText="Description" />
             <ComboBox fx:id="apptTypeComboBox" layoutY="222.0" prefHeight="45.0" prefWidth="436.0" promptText="Choose Appointment Type" />
          </children>
       </AnchorPane>
