@@ -124,7 +124,9 @@ public class LoginController implements Initializable {
         LocalDateTime now = LocalDateTime.now();
         appointments.forEach( (appointment -> {
             long timeDifference = ChronoUnit.MINUTES.between(now, appointment.getStart());
-            if(timeDifference >= 0 && timeDifference <= 15){
+            boolean hasBeenAlerted = false;
+            if(timeDifference >= 0 && timeDifference <= 15 && !hasBeenAlerted){
+                hasBeenAlerted = true;
                 alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setContentText("You have an appointment within the next 15 minutes!");
                 alert.setTitle("Upcoming Appointment!");
