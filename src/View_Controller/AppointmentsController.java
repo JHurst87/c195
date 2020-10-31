@@ -1,6 +1,5 @@
 package View_Controller;
 
-import DAO.CustomerDaoImpl;
 import Model.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
@@ -38,6 +37,9 @@ public class AppointmentsController implements Initializable{
     public LocalDate theWeek;
     public static final int DAYS_IN_WEEK = 7;
 
+    //Month Label
+    @FXML private Label monthLabel;
+
 
     //Appointments
 
@@ -61,7 +63,7 @@ public class AppointmentsController implements Initializable{
         theWeek = now.minusDays(weekOffset);
 
         setValues();
-        thisMonth(); //Load Appointments by Month View (default)
+        calendarView(); //Load Appointments by Month View (default)
     }
 
     public void onActionThisMonth(ActionEvent event){
@@ -87,6 +89,31 @@ public class AppointmentsController implements Initializable{
 
         appointments = AppointmentDaoImpl.getByDateRange(startDT, endDT);
         setAppointmentsTableView(appointments);
+    }
+
+    public void onActionNextMonth(ActionEvent event){
+        theMonth = theMonth.plusMonths(1);
+        calendarView();
+    }
+
+    private void calendarView() {
+        monthLabel.setText(theMonth.format(DateTimeFormatter.ofPattern("MMMM yyyy")));
+        LocalDate firstDay = theMonth.atDay(1);
+        LocalDate lastDay = theMonth.atEndOfMonth();
+        LocalDateTime startDT = LocalDateTime.of(firstDay, LocalTime.MIDNIGHT);
+        LocalDateTime endDT = LocalDateTime.of(lastDay, LocalTime.MAX);
+
+        appointments = AppointmentDaoImpl.getByDateRange(startDT, endDT);
+        setAppointmentsTableView(appointments);
+    }
+
+    public void onActionPrevMonth(ActionEvent event){
+        theMonth = theMonth.minusMonths(1);
+        calendarView();
+    }
+
+    private void onActionWeekly(ActionEvent event){
+
     }
 
     private void showAll() {
