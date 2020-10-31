@@ -1,44 +1,42 @@
 package View_Controller;
 
-import Model.*;
+import DAO.AppointmentDaoImpl;
+import Model.Appointment;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.*;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.*;
-import DAO.AppointmentDaoImpl;
+import javafx.stage.Stage;
 
-import javafx.event.ActionEvent;
-
-import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class AppointmentsController implements Initializable{
+public class AppointmentsWeeklyController implements Initializable {
+
     private Stage stage;
     private Parent scene;
     private Alert alert;
     private ObservableList<Appointment> appointments;
     private Appointment selectedApppointment;
     private DateTimeFormatter appointmentTimeFormat = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
-    public String currentView = "monthly";
-    public YearMonth theMonth;
     public LocalDate theWeek;
     public static final int DAYS_IN_WEEK = 7;
 
-    //Month Label
-    @FXML private Label monthLabel;
+    //Week Label
+    @FXML
+    private Label weekLabel;
 
     //Appointments
 
@@ -50,82 +48,43 @@ public class AppointmentsController implements Initializable{
     @FXML private TableColumn<Appointment, String> startCol = new TableColumn<Appointment, String>();
     @FXML private TableColumn<Appointment, String> endCol = new TableColumn<Appointment, String>();
 
+    public AppointmentsWeeklyController() {
+
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        theMonth = YearMonth.now();
-
         LocalDate now = LocalDate.now();
         int weekOffset = now.getDayOfWeek().getValue() % DAYS_IN_WEEK;
 
         theWeek = now.minusDays(weekOffset);
 
         setValues();
-        calendarView(); //Load Appointments by Month View (default)
+        weeklyView(); //Load Appointments by Month View (default)
     }
 
-    private void thisWeek(){
-        LocalDate lastDayOfNextWeek = theWeek.plusWeeks(1);
-        LocalDateTime startWKDateTime = LocalDateTime.of(this.theWeek, LocalTime.MIDNIGHT);//Start of this week
-        LocalDateTime endWKDateTime = LocalDateTime.of(lastDayOfNextWeek, LocalTime.MAX); //End of next week
+    private void weeklyView(){
+        weekLabel.setText("Week " + theWeek.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)));
 
-        appointments = AppointmentDaoImpl.getByDateRange(startWKDateTime, endWKDateTime);
+        LocalDate lastDay = theWeek.plusWeeks(1);
+        LocalDateTime start = LocalDateTime.of(theWeek, LocalTime.MIDNIGHT);
+        LocalDateTime end = LocalDateTime.of(lastDay, LocalTime.MAX);
+        appointments = AppointmentDaoImpl.getByDateRange(start, end);
         setAppointmentsTableView(appointments);
-    }
-
-    private void thisMonth(){
-        LocalDate firstDay = theMonth.atDay(1);
-        LocalDate lastDay  = theMonth.atEndOfMonth();
-        LocalDateTime startDT = LocalDateTime.of(firstDay, LocalTime.MIDNIGHT); // First day of the target month
-        LocalDateTime endDT = LocalDateTime.of(lastDay,LocalTime.MAX);//End of the Day for that month
-
-        appointments = AppointmentDaoImpl.getByDateRange(startDT, endDT);
-        setAppointmentsTableView(appointments);
-    }
-
-    public void onActionNextMonth(ActionEvent event){
-        theMonth = theMonth.plusMonths(1);
-        calendarView();
-    }
-
-    private void calendarView() {
-        monthLabel.setText(theMonth.format(DateTimeFormatter.ofPattern("MMMM yyyy")));
-        LocalDate firstDay = theMonth.atDay(1);
-        LocalDate lastDay = theMonth.atEndOfMonth();
-        LocalDateTime startDT = LocalDateTime.of(firstDay, LocalTime.MIDNIGHT);
-        LocalDateTime endDT = LocalDateTime.of(lastDay, LocalTime.MAX);
-
-        appointments = AppointmentDaoImpl.getByDateRange(startDT, endDT);
-        setAppointmentsTableView(appointments);
-
-    }
-
-    public void onActionPrevMonth(ActionEvent event){
-        theMonth = theMonth.minusMonths(1);
-        calendarView();
-    }
-
-    public void onActionWeekly(ActionEvent event){
-        AppointmentsWeeklyController controller = new AppointmentsWeeklyController();
-        displayStage("/View_Controller/AppointmentsWeekly.fxml", "Weekly Appointments", event, controller);
-    }
-
-    private void setValues(){
-        // Set values using a Lambda function to help display strings from the embedded classes/properties
-        customerNameCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getCustomer().getCustomerName()));
-        titleCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getTitle()));
-        descriptionCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getDescription()));
-        typeCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getType()));
-        startCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getStart().format(appointmentTimeFormat)));
-        endCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getEnd().format(appointmentTimeFormat)));
     }
 
     private void setAppointmentsTableView(ObservableList<Appointment> appointments){
         appointmentsTableView.setItems(appointments);
     }
 
-    public void onActionThisWeek(ActionEvent event){
-        this.currentView = "weekly";
-        thisWeek();
+    public void onActionPrevWeek(ActionEvent event){
+        theWeek = theWeek.minusWeeks(1);
+        weeklyView();
+    }
+
+    public void onActionNextWeek(ActionEvent event){
+        theWeek = theWeek.plusWeeks(1);
+        weeklyView();
     }
 
     public void onActionAdd(ActionEvent event){
@@ -175,7 +134,7 @@ public class AppointmentsController implements Initializable{
                 Optional<ButtonType> option = alert.showAndWait();
                 if(option.isPresent() && option.get() == ButtonType.OK) {
                     AppointmentDaoImpl.delete(selectedApppointment);
-                    calendarView();
+                    weeklyView();
                 }
             }
         }
@@ -201,6 +160,21 @@ public class AppointmentsController implements Initializable{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void onActionMonthly(ActionEvent event){
+        AppointmentsController controller = new AppointmentsController();
+        displayStage("/View_Controller/Appointments.fxml", "Monthly Appointments", event, controller);
+    }
+
+    private void setValues(){
+        // Set values using a Lambda function to help display strings from the embedded classes/properties
+        customerNameCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getCustomer().getCustomerName()));
+        titleCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getTitle()));
+        descriptionCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getDescription()));
+        typeCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getType()));
+        startCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getStart().format(appointmentTimeFormat)));
+        endCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getEnd().format(appointmentTimeFormat)));
     }
 
     public void displayStage(String resource, String title, ActionEvent event, Object controller){

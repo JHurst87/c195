@@ -41,7 +41,7 @@
                    <Button alignment="CENTER" layoutX="7.0" layoutY="55.0" mnemonicParsing="false" onAction="#onActionDelete" prefHeight="27.0" prefWidth="150.0" text="Delete Appointment" textAlignment="CENTER" />
                    <Button alignment="CENTER" layoutX="7.0" layoutY="82.0" mnemonicParsing="false" onAction="#onActionReturn" prefHeight="27.0" prefWidth="150.0" text="Return to Menu" textAlignment="CENTER" />
                    <Button alignment="CENTER" layoutX="7.0" layoutY="1.0" mnemonicParsing="false" onAction="#onActionAdd" prefHeight="27.0" prefWidth="150.0" text="Add New Appointment" textAlignment="CENTER" />
-         <Button layoutY="442.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="163.0" snapToPixel="false" text="Weekly View" textAlignment="CENTER" />
+         <Button alignment="CENTER" layoutY="442.0" mnemonicParsing="false" onAction="#onActionWeekly" prefHeight="27.0" prefWidth="163.0" snapToPixel="false" text="Weekly View" textAlignment="CENTER" />
       </children>
    </AnchorPane>
    <AnchorPane prefHeight="200.0" prefWidth="200.0">
