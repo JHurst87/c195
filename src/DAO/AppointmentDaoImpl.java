@@ -2,6 +2,7 @@ package DAO;
 
 import Main.AppointmentApp;
 import Model.Appointment;
+import Model.AppointmentReport;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import utils.DBQuery;
@@ -364,5 +365,29 @@ public class AppointmentDaoImpl {
             appointments.add(appointment);
         }
         return appointments;
+    }
+
+    public static ObservableList<AppointmentReport> getAppointmentTypeReport() throws SQLException {
+        ObservableList<AppointmentReport> appointmentReports = FXCollections.observableArrayList();
+
+        String query = String.join(" ","" +
+                "SELECT MONTHNAME(`start`) AS Month, type, COUNT(*) AS Count",
+                "FROM appointment",
+                "GROUP BY MONTHNAME(`start`), type"
+        );
+
+        PreparedStatement ps = conn.prepareStatement(query);
+
+        ResultSet rs = ps.executeQuery();
+
+        while(rs.next()){
+            AppointmentReport report = new AppointmentReport();
+            report.setMonth(rs.getString("Month"));
+            report.setCount(rs.getString("Count"));
+            report.setType(rs.getString("type"));
+            appointmentReports.add(report);
+        }
+
+        return appointmentReports;
     }
 }

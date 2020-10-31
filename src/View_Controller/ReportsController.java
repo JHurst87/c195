@@ -28,25 +28,21 @@ public class ReportsController implements Initializable {
     }
 
     public void onActionAppointmentsType(ActionEvent event){
-        System.out.println("Appointments By Type");
         View_Controller.ReportAppointmentTypesController controller = new ReportAppointmentTypesController();
         displayStage("/View_Controller/ReportAppointmentTypes.fxml", "Appointments By Type", event, controller);
     }
 
     public void onActionSchedule(ActionEvent event){
-        System.out.println("Consultant Schedule");
         View_Controller.ReportScheduleByConsultantController controller = new ReportScheduleByConsultantController();
         displayStage("/View_Controller/ReportScheduleByConsultant.fxml", "Consultant Schedule", event, controller);
     }
 
     public void onActionAppointmentsByCustomer(ActionEvent event){
-        System.out.println("Customers By Country");
         View_Controller.ReportAppointmentsByCustomer controller = new ReportAppointmentsByCustomer();
         displayStage("/View_Controller/ReportAppointmentsByCustomer.fxml", "Appointments By Customer", event, controller);
     }
 
     public void onActionReturn(ActionEvent event){
-        System.out.println("Return to Main Menu");
         View_Controller.MainScreenController controller = new MainScreenController();
         displayStage("/View_Controller/MainScreen.fxml", "Appointments", event, controller);
     }
