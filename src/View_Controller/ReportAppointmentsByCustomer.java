@@ -64,10 +64,18 @@ public class ReportAppointmentsByCustomer implements Initializable {
     }
 
     public void onActionUpdate(ActionEvent event){
-        Customer customer = custComboBox.getSelectionModel().getSelectedItem();
-        System.out.println("Customer: " + customer.getCustomerId());
-        appointments = AppointmentDaoImpl.getByCustomerId(customer.getCustomerId());
-        setReportsTableView(appointments);
+        try {
+            Customer customer = custComboBox.getSelectionModel().getSelectedItem();
+            System.out.println("Customer: " + customer.getCustomerId());
+            appointments = AppointmentDaoImpl.getByCustomerId(customer.getCustomerId());
+            setReportsTableView(appointments);
+        }
+        catch(Exception e){
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Please select a customer before querying for data.");
+            alert.setTitle("Appointments By Customer Report Error");
+            alert.show();
+        }
     }
 
     public void onActionReturn(ActionEvent event){

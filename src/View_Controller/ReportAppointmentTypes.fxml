@@ -9,12 +9,12 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label layoutX="214.0" layoutY="311.0" text="Appointments By Type">
+      <Label layoutX="214.0" layoutY="18.0" text="Appointments By Type">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Button layoutX="530.0" layoutY="16.0" mnemonicParsing="false" onAction="#onActionReturn" text="Back" />
+      <Button layoutX="533.0" layoutY="16.0" mnemonicParsing="false" onAction="#onActionReturn" text="Back" />
       <TableView fx:id="reportTableView" layoutX="178.0" layoutY="59.0" prefHeight="238.0" prefWidth="256.0">
         <columns>
           <TableColumn fx:id="monthCol" prefWidth="75.0" text="Month" />

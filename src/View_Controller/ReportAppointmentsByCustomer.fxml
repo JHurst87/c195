@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -10,12 +11,13 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="569.0" prefWidth="766.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="618.0" minWidth="10.0" prefWidth="618.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="0.0" prefWidth="7.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="10.0" prefWidth="178.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="0.0" prefWidth="0.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="10.0" prefWidth="163.0" />
     </columnConstraints>
     <rowConstraints>
         <RowConstraints maxHeight="396.0" minHeight="10.0" prefHeight="51.0" vgrow="SOMETIMES" />
@@ -23,7 +25,7 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <VBox prefHeight="396.0" prefWidth="197.0" GridPane.columnIndex="2" />
-    <TableView fx:id="appointmentsTableView" prefHeight="500.0" prefWidth="500.0" GridPane.rowIndex="1">
+    <TableView fx:id="appointmentsTableView" prefHeight="483.0" prefWidth="574.0" GridPane.rowIndex="1">
         <columns>
             <TableColumn fx:id="customerNameCol" prefWidth="133.0" text="Customer Name" />
             <TableColumn fx:id="titleCol" prefWidth="61.0" text="Title" />
@@ -36,10 +38,17 @@
     <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2" />
     <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="487.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
         <children>
-            <Button alignment="CENTER" layoutY="1.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="163.0" onAction="#onActionReturn" text="Return to Menu" textAlignment="CENTER" />
-            <ComboBox fx:id="custComboBox" layoutY="37.0" prefHeight="27.0" prefWidth="163.0" promptText="Choose Customer" />
-            <Button layoutY="71.0" mnemonicParsing="false" onAction="#onActionUpdate" text="Update" />
+            <Button alignment="CENTER" layoutY="1.0" mnemonicParsing="false" onAction="#onActionReturn" prefHeight="27.0" prefWidth="163.0" text="Return to Menu" textAlignment="CENTER" />
+            <ComboBox fx:id="custComboBox" layoutY="37.0" prefHeight="27.0" prefWidth="163.0" promptText="-- Customer --" />
+            <Button layoutY="71.0" mnemonicParsing="false" onAction="#onActionUpdate" text="Submit" />
         </children>
     </AnchorPane>
-    <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+    <AnchorPane prefHeight="200.0" prefWidth="200.0">
+      <children>
+         <Label layoutX="167.0" layoutY="13.0" text="Appoinments by Customer">
+            <font>
+               <Font size="24.0" />
+            </font>
+         </Label>
+      </children></AnchorPane>
 </GridPane>

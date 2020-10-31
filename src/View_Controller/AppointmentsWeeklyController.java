@@ -169,6 +169,7 @@ public class AppointmentsWeeklyController implements Initializable {
 
     private void setValues(){
         // Set values using a Lambda function to help display strings from the embedded classes/properties
+        // Efficiently allows me to loop through the data very succinctly and is pleasing the eye
         customerNameCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getCustomer().getCustomerName()));
         titleCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getTitle()));
         descriptionCol.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getDescription()));

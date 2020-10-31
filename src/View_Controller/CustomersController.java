@@ -33,7 +33,9 @@ public class CustomersController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //Load Customers using Lambda to help set strings and grabe the correct values from the object
+        //Load Customers using Lambda to help set strings and grab the correct values from the object
+        //Short and sweet this Lambda function does a lot in a little bit of space as opposed to having to write
+        // a full loop which would also work but would be very much an eyesore
         customerNameCol.setCellValueFactory(data-> new SimpleStringProperty(data.getValue().getCustomerName()));
         addressCol.setCellValueFactory(data-> new SimpleStringProperty(data.getValue().getAddress().getAddress()));
         address2Col.setCellValueFactory(data-> new SimpleStringProperty(data.getValue().getAddress().getAddress2()));
