@@ -39,6 +39,96 @@ public class AppointmentDaoImpl {
         return apptsThisWeek;
     }
 
+    public static ObservableList<Appointment> getByCustomerId(int userId){
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+
+        String query = String.join(" ",
+                "SELECT * FROM appointment",
+                "WHERE customerId = ? ORDER BY start ASC"
+        );
+
+        try{
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+
+            while(rs.next()){
+                Appointment rsAppointment = new Appointment();
+
+                rsAppointment.setAppointmentId(rs.getInt("appointmentId"));
+                rsAppointment.setUserId(rs.getInt("userId"));
+                rsAppointment.setTitle(rs.getString("title"));
+                rsAppointment.setDescription(rs.getString("description"));
+                rsAppointment.setLocation(rs.getString("location"));
+                rsAppointment.setContact(rs.getString("contact"));
+                rsAppointment.setType(rs.getString("type"));
+                rsAppointment.setUrl(rs.getString("url"));
+
+                ZoneId zone = ZoneId.systemDefault();
+                LocalDateTime startTimeUTC = rs.getTimestamp("start").toLocalDateTime();
+                LocalDateTime endTimeUTC = rs.getTimestamp("end").toLocalDateTime();
+                LocalDateTime startTimeLocal = startTimeUTC.atZone(ZoneOffset.UTC).withZoneSameInstant(zone).toLocalDateTime();
+                LocalDateTime endTimeLocal = endTimeUTC.atZone(ZoneOffset.UTC).withZoneSameInstant(zone).toLocalDateTime();
+
+                rsAppointment.setStart(startTimeLocal);
+                rsAppointment.setEnd(endTimeLocal);
+
+                rsAppointment.setCustomer(CustomerDaoImpl.getById(rs.getInt("customerId")));
+
+                appointments.add(rsAppointment);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return appointments;
+    }
+
+    public static ObservableList<Appointment> getByUserId(int userId){
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+
+        String query = String.join(" ",
+                "SELECT * FROM appointment",
+                "WHERE userId = ? ORDER BY start ASC"
+        );
+
+        try{
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+
+            while(rs.next()){
+                Appointment rsAppointment = new Appointment();
+
+                rsAppointment.setAppointmentId(rs.getInt("appointmentId"));
+                rsAppointment.setUserId(rs.getInt("userId"));
+                rsAppointment.setTitle(rs.getString("title"));
+                rsAppointment.setDescription(rs.getString("description"));
+                rsAppointment.setLocation(rs.getString("location"));
+                rsAppointment.setContact(rs.getString("contact"));
+                rsAppointment.setType(rs.getString("type"));
+                rsAppointment.setUrl(rs.getString("url"));
+
+                ZoneId zone = ZoneId.systemDefault();
+                LocalDateTime startTimeUTC = rs.getTimestamp("start").toLocalDateTime();
+                LocalDateTime endTimeUTC = rs.getTimestamp("end").toLocalDateTime();
+                LocalDateTime startTimeLocal = startTimeUTC.atZone(ZoneOffset.UTC).withZoneSameInstant(zone).toLocalDateTime();
+                LocalDateTime endTimeLocal = endTimeUTC.atZone(ZoneOffset.UTC).withZoneSameInstant(zone).toLocalDateTime();
+
+                rsAppointment.setStart(startTimeLocal);
+                rsAppointment.setEnd(endTimeLocal);
+
+                rsAppointment.setCustomer(CustomerDaoImpl.getById(rs.getInt("customerId")));
+
+                appointments.add(rsAppointment);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return appointments;
+    }
+
     public static ObservableList<Appointment> getByDateRange(LocalDateTime start, LocalDateTime end){
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 

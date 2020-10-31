@@ -33,7 +33,7 @@ public class CustomersController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //Load Customers
+        //Load Customers using Lambda to help set strings and grabe the correct values from the object
         customerNameCol.setCellValueFactory(data-> new SimpleStringProperty(data.getValue().getCustomerName()));
         addressCol.setCellValueFactory(data-> new SimpleStringProperty(data.getValue().getAddress().getAddress()));
         address2Col.setCellValueFactory(data-> new SimpleStringProperty(data.getValue().getAddress().getAddress2()));
