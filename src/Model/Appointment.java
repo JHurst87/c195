@@ -9,6 +9,7 @@ import DAO.AppointmentDaoImpl;
 import Exception.AppointmentException;
 import Exception.AppointmentTimeException;
 import Exception.AppointmentOverlappingException;
+import View_Controller.ModifyAppointmentController;
 import javafx.collections.ObservableList;
 
 public class Appointment {
@@ -240,15 +241,17 @@ public class Appointment {
         LocalDateTime start = LocalDateTime.of(startDay, startTime);
         LocalDateTime end = LocalDateTime.of(endDay, endTime);
 
-        if(getOverlappingAppointments(start, end) > 0){
-            throw new AppointmentOverlappingException("Contact/consultant has a conflicting appointment at this time.");
-        }
+//        //Process Overlapping appointments
+//        if(!isValidOverlappingAppointments(start, end)){
+//            throw new AppointmentOverlappingException("Contact/consultant has a conflicting appointment at this time.");
+//        }
 
         return true;
     }
 
-    public int getOverlappingAppointments(LocalDateTime start, LocalDateTime end) throws SQLException {
-        ObservableList<Appointment> appointments = AppointmentDaoImpl.getOverlappingAppointments(start, end);
-        return appointments.size();
+    public ObservableList<Appointment> getOverlappingAppointments() throws SQLException {
+        //Uses time from appointments to check for conflicts
+        return AppointmentDaoImpl.getOverlappingAppointments(this.getStart(), this.getEnd());
     }
+
 }

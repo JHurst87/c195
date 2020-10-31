@@ -1,5 +1,6 @@
 package View_Controller;
 
+import Exception.AppointmentOverlappingException;
 import Exception.AppointmentTimeException;
 import DAO.AppointmentDaoImpl;
 import DAO.CustomerDaoImpl;
@@ -21,6 +22,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -32,8 +34,10 @@ public class ModifyAppointmentController implements Initializable {
     private Stage stage;
     private Parent scene;
     private Alert alert;
-    private Appointment appointment;
-    private Boolean isNewAppointment = false;
+    public Appointment appointment;
+    public Appointment oldAppointment;
+    public boolean isNewAppointment = false;
+    public boolean isModified = false;
     private ObservableList<Customer> customers;
     private ObservableList<User> users;
     private DateTimeFormatter appointmentTimeFormat = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
@@ -74,8 +78,8 @@ public class ModifyAppointmentController implements Initializable {
     @FXML
     private ComboBox<String> apptEndAMPM;
 
-    public ModifyAppointmentController(Appointment appointment, Boolean isNewAppointment) {
-        this.appointment = appointment;
+    public ModifyAppointmentController(Appointment oldAppointment, Boolean isNewAppointment) {
+        this.oldAppointment = oldAppointment;
         this.isNewAppointment = isNewAppointment;
         if (isNewAppointment) {
             this.appointment = new Appointment();
@@ -95,11 +99,11 @@ public class ModifyAppointmentController implements Initializable {
         );
 
         apptCustomerComboBox.setItems(this.customers);
-        apptDescription.setText(this.appointment.getDescription());
-        apptTitle.setText(this.appointment.getTitle());
-        apptContact.setText(this.appointment.getContact());
-        apptURL.setText(this.appointment.getUrl());
-        apptLocation.setText(this.appointment.getLocation());
+        apptDescription.setText(this.oldAppointment.getDescription());
+        apptTitle.setText(this.oldAppointment.getTitle());
+        apptContact.setText(this.oldAppointment.getContact());
+        apptURL.setText(this.oldAppointment.getUrl());
+        apptLocation.setText(this.oldAppointment.getLocation());
         apptDate.setValue(LocalDate.now());
         apptTypeComboBox.setItems(types);
 
@@ -124,21 +128,21 @@ public class ModifyAppointmentController implements Initializable {
         apptEndAMPM.getSelectionModel().selectFirst();
 
         if(!isNewAppointment){
-            apptCustomerComboBox.getSelectionModel().select(this.appointment.getCustomer());
-            apptDate.setValue(this.appointment.getStart().toLocalDate());
-            apptContact.setText(this.appointment.getContact());
-            apptTypeComboBox.getSelectionModel().select(this.appointment.getType());
+            apptCustomerComboBox.getSelectionModel().select(this.oldAppointment.getCustomer());
+            apptDate.setValue(this.oldAppointment.getStart().toLocalDate());
+            apptContact.setText(this.oldAppointment.getContact());
+            apptTypeComboBox.getSelectionModel().select(this.oldAppointment.getType());
 
-            System.out.println("Start: " + this.appointment.getStart().format(appointmentTimeFormat));
-            apptStartHours.getSelectionModel().select((this.appointment.getStart().format(appointmentHourFormatter)));
-            apptStartMinutes.getSelectionModel().select("" + this.appointment.getStart().format(appointmentMinuteFormatter));
-            apptStartAMPM.getSelectionModel().select(this.appointment.getStart().getHour() < 12 ? "AM":"PM");
+            System.out.println("Start: " + this.oldAppointment.getStart().format(appointmentTimeFormat));
+            apptStartHours.getSelectionModel().select((this.oldAppointment.getStart().format(appointmentHourFormatter)));
+            apptStartMinutes.getSelectionModel().select("" + this.oldAppointment.getStart().format(appointmentMinuteFormatter));
+            apptStartAMPM.getSelectionModel().select(this.oldAppointment.getStart().getHour() < 12 ? "AM":"PM");
 
-            apptEndHours.getSelectionModel().select((this.appointment.getEnd().format(appointmentHourFormatter)));
-            apptEndMinutes.getSelectionModel().select("" + this.appointment.getEnd().format(appointmentMinuteFormatter));
-            apptEndAMPM.getSelectionModel().select(this.appointment.getEnd().getHour() < 12 ? "AM":"PM");
+            apptEndHours.getSelectionModel().select((this.oldAppointment.getEnd().format(appointmentHourFormatter)));
+            apptEndMinutes.getSelectionModel().select("" + this.oldAppointment.getEnd().format(appointmentMinuteFormatter));
+            apptEndAMPM.getSelectionModel().select(this.oldAppointment.getEnd().getHour() < 12 ? "AM":"PM");
 
-            System.out.println("End: " + this.appointment.getEnd().format(appointmentTimeFormat));
+            System.out.println("End: " + this.oldAppointment.getEnd().format(appointmentTimeFormat));
         }
     }
 
@@ -179,23 +183,23 @@ public class ModifyAppointmentController implements Initializable {
             LocalDateTime newStartDateTime = LocalDateTime.of(newDate, LocalTime.parse(newStartTime, appointmentTimeFullFormat));
             LocalDateTime newEndDateTime = LocalDateTime.of(newDate, LocalTime.parse(newEndTime, appointmentTimeFullFormat));
 
-            Appointment appointment = new Appointment();
-            appointment.setUserId(AppointmentApp.user.getUserId());
-            appointment.setCustomer(apptCustomerComboBox.getValue());
-            appointment.setContact(apptContact.getText());
-            appointment.setTitle(apptTitle.getText());
-            appointment.setDescription(apptDescription.getText());
-            appointment.setLocation(apptLocation.getText());
-            appointment.setType(apptTypeComboBox.getValue());
-            appointment.setUrl(apptURL.getText());
-            appointment.setStart(newStartDateTime);
-            appointment.setEnd(newEndDateTime);
+            Appointment modifiedAppointment = new Appointment();
+            modifiedAppointment.setUserId(AppointmentApp.user.getUserId());
+            modifiedAppointment.setCustomer(apptCustomerComboBox.getValue());
+            modifiedAppointment.setContact(apptContact.getText());
+            modifiedAppointment.setTitle(apptTitle.getText());
+            modifiedAppointment.setDescription(apptDescription.getText());
+            modifiedAppointment.setLocation(apptLocation.getText());
+            modifiedAppointment.setType(apptTypeComboBox.getValue());
+            modifiedAppointment.setUrl(apptURL.getText());
+            modifiedAppointment.setStart(newStartDateTime);
+            modifiedAppointment.setEnd(newEndDateTime);
 
             if(!isNewAppointment){
                 //Update Existing appointment
-                if(appointment.isValid()){
-                    appointment.setAppointmentId(this.appointment.getAppointmentId());
-                    AppointmentDaoImpl.update(appointment);
+                if(modifiedAppointment.isValid() && isValidOverlappingAppointments(this.oldAppointment)){
+                    modifiedAppointment.setAppointmentId(this.oldAppointment.getAppointmentId());
+                    AppointmentDaoImpl.update(modifiedAppointment);
                     View_Controller.AppointmentsController controller = new AppointmentsController();
                     showScreen("/View_Controller/Appointments.fxml", "Appointments", event, controller);
                 } else {
@@ -204,8 +208,8 @@ public class ModifyAppointmentController implements Initializable {
                     alert.show();
                 }
             } else {
-                if(appointment.isValid()){
-                    appointment.setAppointmentId(AppointmentDaoImpl.create(appointment));
+                if(modifiedAppointment.isValid() && isValidOverlappingAppointments(modifiedAppointment)){
+                    modifiedAppointment.setAppointmentId(AppointmentDaoImpl.create(modifiedAppointment));
                     View_Controller.AppointmentsController controller = new AppointmentsController();
                     showScreen("/View_Controller/Appointments.fxml", "Appointments", event, controller);
                 } else {
@@ -232,14 +236,19 @@ public class ModifyAppointmentController implements Initializable {
         stage.show();
     }
 
-    private boolean isValid(){
+    private boolean isValidOverlappingAppointments(Appointment oldAppointment) throws SQLException, AppointmentOverlappingException {
+        //Get overlapping appointments
+        ObservableList<Appointment> overLappingAppointments = oldAppointment.getOverlappingAppointments();
+        //Process them 1 at a time
+        for(Appointment overLapAppt : overLappingAppointments){
+            //Proceed if the IDs match
+            if(overLapAppt.getAppointmentId() != oldAppointment.getAppointmentId()){
+                //Throw exception only iff the IDs don't match
+                throw new AppointmentOverlappingException("The requested time has a conflicting appointment.");
+            }
+        }
 
+        //Return true if valid
         return true;
     }
-
-    private void setUserInput(){
-
-    }
-
-
 }
