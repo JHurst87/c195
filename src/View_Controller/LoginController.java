@@ -1,8 +1,11 @@
 package View_Controller;
 
+import DAO.AppointmentDaoImpl;
 import DAO.UserDaoImpl;
 import Main.AppointmentApp;
+import Model.Appointment;
 import Model.User;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,7 +22,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+
 
 public class LoginController implements Initializable {
     private Stage stage;
@@ -67,6 +77,9 @@ public class LoginController implements Initializable {
                 //Get User
 
                 AppointmentApp.user = new User(1, "test");
+
+                checkAppointments();
+                logger(AppointmentApp.user.getName(), LocalDateTime.now());
                 // Change stage
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/MainScreen.fxml"));
@@ -86,5 +99,37 @@ public class LoginController implements Initializable {
             throwables.printStackTrace();
             DBConnection.closeConnection();
         }
+    }
+
+    private void logger(String name, LocalDateTime time) {
+        Logger log = Logger.getLogger("user_sign_ins.txt");
+
+        try{
+            FileHandler fh = new FileHandler("user_sign_ins.txt", true);
+            SimpleFormatter sf = new SimpleFormatter();
+            fh.setFormatter(sf);
+            log.addHandler(fh);
+
+            log.info("User Login: " + name + " Time: " + time );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkAppointments() {
+        ObservableList<Appointment> appointments = AppointmentDaoImpl.getAll();
+
+        //Check if any upcoming appointments are within the 15 minute login window using a Lambda function
+
+        LocalDateTime now = LocalDateTime.now();
+        appointments.forEach( (appointment -> {
+            long timeDifference = ChronoUnit.MINUTES.between(now, appointment.getStart());
+            if(timeDifference >= 0 && timeDifference <= 15){
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("You have an appointment within the next 15 minutes!");
+                alert.setTitle("Upcoming Appointment!");
+                alert.show();
+            }
+        }));
     }
 }
