@@ -1,7 +1,9 @@
 package Model;
 
+import Exception.CustomerException;
 public class Customer {
     private int customerId;
+    private int addressId;
     private String customerName;
     private Boolean active;
     private Address address;
@@ -10,18 +12,26 @@ public class Customer {
         this.customerId = 0;
         this.customerName = "";
         this.active = false;
-        this.address = new Address();
+        this.address = null;
     }
 
-    public Customer(int customerId, String customerName, int addressId, Boolean active, Address address){
+    public Customer(int customerId, int addressId,  String customerName, Boolean active, Address address){
         this.customerId = customerId;
         this.customerName = customerName;
         this.active = active;
         this.address = address;
     }
 
-    public boolean isValid(){
-        return this.customerId != 0 && this.customerName != "" && this.address.getAddressId() != 0;
+    public boolean isValid() throws CustomerException {
+        if(this.customerName.equals("")){
+            throw new CustomerException("Customer name is required.");
+        }
+
+        if(this.address == null){
+            throw new CustomerException("Customer has invalid address");
+        }
+
+        return true;
     }
 
     public int getCustomerId(){
@@ -44,7 +54,6 @@ public class Customer {
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
     }
-
 
     public void setAddress(Address address){
         this.address = address;

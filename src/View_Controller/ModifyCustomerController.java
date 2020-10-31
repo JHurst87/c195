@@ -8,7 +8,10 @@ import Model.Country;
 import Model.Customer;
 import Model.Address;
 import Model.City;
-import javafx.beans.property.SimpleStringProperty;
+import Exception.CityException;
+import Exception.CustomerException;
+import Exception.AddressException;
+
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -55,7 +58,7 @@ public class ModifyCustomerController implements Initializable {
         this.customer = selectedCustomer;
         this.isNewCustomer = isNewCustomer;
         System.out.println("Ran modified constructor!");
-        if(isNewCustomer){
+        if (isNewCustomer) {
             this.customer = new Customer();
         }
     }
@@ -64,7 +67,7 @@ public class ModifyCustomerController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.countries = CountryDaoImpl.getAllCountries();
         countryField.setItems(this.countries);
-        if(!isNewCustomer){
+        if (!isNewCustomer) {
             System.out.println("Loaded Modify Customer!");
             nameField.setText(this.customer.getCustomerName());
             addressField.setText(this.customer.getAddress().getAddress());
@@ -72,19 +75,18 @@ public class ModifyCustomerController implements Initializable {
             cityField.setText(this.customer.getAddress().getCity().getCityName());
             postalCodeField.setText(this.customer.getAddress().getPostalCode());
             countryField.getSelectionModel().select(this.customer.getAddress().getCity().getCountry());
-            System.out.println("Selected CountryId: " + this.customer.getAddress().getCity().getCountry().getCountryId());
             phoneField.setText(this.customer.getAddress().getPhone());
         }
     }
 
     @FXML
-    public void onActionCancel(ActionEvent event){
+    public void onActionCancel(ActionEvent event) {
         System.out.println("Go back to main Customer screen");
         displayCustomerScreen(event);
     }
 
     @FXML
-    public void onActionSave(ActionEvent event){
+    public void onActionSave(ActionEvent event) throws CityException, CustomerException, AddressException {
 
         // GUI values
         String customerNameText = nameField.getText();
@@ -96,133 +98,83 @@ public class ModifyCustomerController implements Initializable {
         String phoneText = phoneField.getText();
 
         // Detect if new customer or Existing customer
-        if(!isNewCustomer){
-            Address modifiedAddress = this.customer.getAddress();
-            City modifiedCity = modifiedAddress.getCity();
-            City city = modifiedCityHandler(modifiedCity.getCityId(), cityText, modifiedCountry);
-            Address address = modifyAddressHandler(modifiedAddress.getAddressId(), addressText, address2Text, city, postalCodeText, phoneText);
-            if(city.isValid() && address.isValid()){
-                try{
-                    if(address.isValid()){
-                        //Display
-                        Customer customer = modifyCustomerHandler(this.customer.getCustomerId(), customerNameText, address);
-                        System.out.println("Successfully Updated Customer!");
+        if (!isNewCustomer) {
+            try {
+
+                Address oldAddress = this.customer.getAddress();
+                City oldCity = oldAddress.getCity();
+                City updatedCity = new City();
+                updatedCity.setCityId(oldCity.getCityId());
+                updatedCity.setCityName(oldCity.getCityName());
+                updatedCity.setCountry(modifiedCountry);
+                Address updatedAddress = new Address();
+                if (updatedCity.isValid()) {
+                    updatedAddress.setAddressId(oldAddress.getAddressId());
+                    updatedAddress.setAddress(addressText);
+                    updatedAddress.setAddress2(address2Text);
+                    updatedAddress.setCity(updatedCity);
+                    updatedAddress.setPostalCode(postalCodeText);
+                    updatedAddress.setPhone(phoneText);
+
+                    AddressDaoImpl.update(updatedAddress); //Update the validated address information
+                }
+                if (updatedAddress.isValid()) {
+                    //Display
+                    //Customer customer = modifyCustomerHandler(this.customer.getCustomerId(), customerNameText, updatedAddress);
+                    Customer customer = new Customer();
+                    customer.setCustomerId(this.customer.getCustomerId());
+                    customer.setCustomerName(customerNameText);
+                    customer.setAddress(updatedAddress);
+                    if (customer.isValid()) {
+                        CustomerDaoImpl.update(customer); //Update the customer
                         displayCustomerScreen(event);
-                    }else{
-                        //Create Error messages
-                        System.out.println("There were errors!");
-                        alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setContentText("Customer Data Validation Errors");
-                        alert.setTitle("Invalid Customer Data");
-                        alert.show();
                     }
                 }
-                catch(Exception e){
-                    e.printStackTrace();
-                }
+            }
+            catch(Exception e){
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText(e.getMessage());
+                alert.setTitle("Customer Update Error");
+                alert.show();
             }
         } else {
-            //New Customer and NO ID exists
-            City city = addCityHandler(cityText, modifiedCountry);
-            Address address = addAddressHandler(addressText, address2Text, postalCodeText, city ,phoneText );
-            Customer customer = addCustomerHandler(customerNameText, address);
-            if(city.isValid() && address.isValid() && customer.isValid()){
-                if(customer.getCustomerId() != 0){
+            try {
+                //New Customer and NO ID exists
+                City city = new City();
+                city.setCityName(cityText);
+                city.setCountry(modifiedCountry);
+                if (city.isValid()) {
+                    city.setCityId(CityDaoImpl.create(city));
+                }
+                Address address = new Address();
+                address.setAddress(addressText);
+                address.setAddress2(address2Text);
+                address.setPostalCode(postalCodeText);
+                address.setCity(city);
+                address.setPhone(phoneText);
+                if (address.isValid()) {
+                    address.setAddressId(AddressDaoImpl.create(address));
+                }
+                Customer customer = new Customer();
+                customer.setCustomerName(customerNameText);
+                customer.setAddress(address);
+                if (customer.isValid()) {
+                    customer.setCustomerId(CustomerDaoImpl.create(customer));
                     System.out.println("Add New Customer!");
                     displayCustomerScreen(event);
                 }
-            } else {
-                //Create Error messages
-                System.out.println("There were errors!");
+            } catch (Exception e) {
                 alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText("Customer Data Validation Errors");
-                alert.setTitle("Invalid Customer Data");
+                alert.setContentText(e.getMessage());
+                alert.setTitle("Customer Data Validation Error");
                 alert.show();
             }
         }
-
     }
 
-    private Customer addCustomerHandler(String customerName, Address address) {
-        Customer customer = new Customer();
-
-        customer.setCustomerName(customerName);
-        customer.setAddress(address);
-
-        customer.setCustomerId(CustomerDaoImpl.create(customer));
-
-        return customer;
-    }
-
-    private Address addAddressHandler(String address1, String address2, String postalCode, City city, String phone) {
-        Address address = new Address();
-
-        address.setAddress(address1);
-        address.setAddress2(address2);
-        address.setPostalCode(postalCode);
-        address.setCity(city);
-        address.setPhone(phone);
-
-        address.setAddressId(AddressDaoImpl.create(address));
-
-        return address;
-    }
-
-    private City addCityHandler(String cityText, Country country) {
-        City city = new City();
-        city.setCityName(cityText);
-        city.setCountry(country);
-
-        city.setCityId(CityDaoImpl.create(city));
-
-        return city;
-    }
-
-    private Customer modifyCustomerHandler(int customerId, String customerNameText, Address address) {
-        Customer customer = new Customer();
-        customer.setCustomerId(customerId);
-        customer.setCustomerName(customerNameText);
-        customer.setAddress(address);
-
-        CustomerDaoImpl.update(customer);
-        return customer;
-    }
-
-    private City modifiedCityHandler(int cityId, String cityText, Country country) {
-        City city = new City();
-        city.setCityId(cityId);
-        city.setCityName(cityText);
-        city.setCountry(country);
-
-        CityDaoImpl.update(city, country);
-
-        return city;
-    }
-
-    private Address modifyAddressHandler(int addressId, String address1, String address2, City city, String postalCode, String phone) {
-        Address address = new Address();
-
-        address.setAddressId(addressId);
-        address.setAddress(address1);
-        address.setAddress2(address2);
-        address.setCity(city);
-        address.setPostalCode(postalCode);
-        address.setPhone(phone);
-
-        AddressDaoImpl.updateAddress(address);
-
-        return address;
-    }
-
-    private Country modifyCountryHandler(int countryId, Address address) {
-        Country country = new Country();
-        //CountryDaoImpl.update(countryId, );
-        return country;
-    }
-
-    private void displayCustomerScreen(ActionEvent event){
+    private void displayCustomerScreen(ActionEvent event) {
         try {
-            stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
+            stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/Customers.fxml"));
             View_Controller.CustomersController controller = new View_Controller.CustomersController();
             loader.setController(controller);

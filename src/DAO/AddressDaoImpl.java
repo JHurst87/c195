@@ -70,7 +70,7 @@ public class AddressDaoImpl{
         return 0;
     }
 
-    public static void updateAddress(Address address){
+    public static void update(Address address){
         String query = String.join(" ",
                 "UPDATE address",
                 "SET address=?,",

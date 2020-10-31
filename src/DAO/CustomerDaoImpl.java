@@ -11,7 +11,6 @@ import utils.DBQuery;
 
 import java.sql.*;
 
-
 public class CustomerDaoImpl {
     public final static Connection conn = AppointmentApp.conn;
     public static ObservableList<Customer> getAll() {
@@ -25,13 +24,10 @@ public class CustomerDaoImpl {
 
             while(rs.next()) {
                 //Create Customer
-                Customer customer = new Customer(
-                    rs.getInt("customerId"),
-                    rs.getString("customerName"),
-                    rs.getInt("addressId"),
-                    rs.getBoolean("active"),
-                    AddressDaoImpl.getById(rs.getInt("addressId"))
-                );
+                Customer customer = new Customer();
+                customer.setCustomerId(rs.getInt("customerId"));
+                customer.setCustomerName(rs.getString("customerName"));
+                customer.setAddress(AddressDaoImpl.getById(rs.getInt("addressId")));
 
                 customers.add(customer);
             }
@@ -39,24 +35,6 @@ public class CustomerDaoImpl {
             throwables.printStackTrace();
         }
         return customers;
-    }
-
-    public static String getCustomerName(int customerId){
-        try{
-            String selectQuery = "SELECT customerName FROM customer WHERE customerId = ?";
-            DBQuery.setPrepareStatement(conn, selectQuery);
-            PreparedStatement ps = DBQuery.getPreparedStatement();
-            ps.setInt(1, customerId);
-
-            ResultSet rs = ps.executeQuery();
-
-            if(rs.next()){
-                return rs.getString("customerName");
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return "";
     }
 
     public static int create(Customer customer){

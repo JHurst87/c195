@@ -29,37 +29,6 @@ public class AppointmentApp extends Application {
     }
 
     public static void main(String args[]) throws SQLException {
-//        String insertStatement = "INSERT INTO country(country, createDate, createdBy, lastUpdateBy) VALUES (?, ?, ?, ?)";
-
-//        DBQuery.setPrepareStatement(conn, insertStatement); //Create prepared statement
-//
-//        PreparedStatement ps = DBQuery.getPreparedStatement();
-//
-//        String countryName;
-//        String createDate = "2020-10-13 00:00:00";
-//        String createdBy = "admin";
-//        String lastUpdateBy = "admin";
-//        //Get keyboard input
-//        Scanner keyboard = new Scanner(System.in);
-//        System.out.print("Enter a country: ");
-//        countryName = keyboard.nextLine();
-//
-//        // Key value mapping
-//        ps.setString(1, countryName);
-//        ps.setString(2, createDate);
-//        ps.setString(3, createdBy);
-//        ps.setString(4, lastUpdateBy);
-//
-//        ps.execute();
-//
-//        // Check rows affected
-//
-//        if(ps.getUpdateCount() > 0){
-//            System.out.println(ps.getUpdateCount() + " row(s) affected.");
-//        } else {
-//            System.out.println("No Change!");
-//        }
-
         launch(args);
 
         DBConnection.closeConnection();

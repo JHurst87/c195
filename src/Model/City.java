@@ -1,5 +1,7 @@
 package Model;
 
+import Exception.CityException;
+
 public class City {
     private int cityId;
     private String cityName;
@@ -8,7 +10,7 @@ public class City {
     public City(){
         this.cityId = 0;
         this.cityName = "";
-        this.country = new Country();
+        this.country = null;
     }
 
     public City(int cityId, String cityName, Country country){
@@ -17,8 +19,15 @@ public class City {
         this.country = country;
     }
 
-    public boolean isValid(){
-        return this.cityId != 0 && this.cityName != "" && this.country.getCountryId() != 0;
+    public boolean isValid() throws CityException {
+        if(this.cityName.equals("")){
+            throw new CityException("City name is required");
+        }
+
+        if(this.country == null){
+            throw new CityException("Country is required");
+        }
+        return true;
     }
 
     public int getCityId() {

@@ -1,11 +1,15 @@
 package Model;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import DAO.AppointmentDaoImpl;
 import Exception.AppointmentException;
 import Exception.AppointmentTimeException;
+import Exception.AppointmentOverlappingException;
+import javafx.collections.ObservableList;
 
 public class Appointment {
     private int appointmentId;
@@ -142,7 +146,7 @@ public class Appointment {
         this.customer = customer;
     }
 
-    public boolean isValid() throws AppointmentException {
+    public boolean isValid() throws AppointmentException, SQLException {
         if(this.customer == null){
             throw new AppointmentException("Please select a customer.");
         }
@@ -190,13 +194,14 @@ public class Appointment {
         this.userId = userId;
     }
 
-    public boolean isValidTime() throws AppointmentTimeException {
+    public boolean isValidTime() throws AppointmentTimeException, SQLException {
         /*
         Time validation
         Rules:
         1. Appointment can be only made Monday through Saturday
         2. Appointment can only be held on 1 day, aka no spanning multiple days.
         3. Appointment can only be made during 9AM to 5PM Local Time
+        4. Appointment end cannot before appointment start time
         */
         LocalTime midnight = LocalTime.MIDNIGHT;
         LocalDate startDay = this.start.toLocalDate();
@@ -224,6 +229,26 @@ public class Appointment {
             throw new AppointmentTimeException("Appointment must be made BEFORE 5PM and ON or AFTER 9AM Local Time");
         }
 
+        if(endTime.isBefore(startTime)){
+            throw new AppointmentTimeException("Appointment end time must be AFTER start time");
+        }
+
+        if(endTime.equals(startTime)){
+            throw new AppointmentTimeException("Appointment cannot start and end at the same time");
+        }
+
+        LocalDateTime start = LocalDateTime.of(startDay, startTime);
+        LocalDateTime end = LocalDateTime.of(endDay, endTime);
+
+        if(getOverlappingAppointments(start, end) > 0){
+            throw new AppointmentOverlappingException("Contact/consultant has a conflicting appointment at this time.");
+        }
+
         return true;
+    }
+
+    public int getOverlappingAppointments(LocalDateTime start, LocalDateTime end) throws SQLException {
+        ObservableList<Appointment> appointments = AppointmentDaoImpl.getOverlappingAppointments(start, end);
+        return appointments.size();
     }
 }

@@ -1,5 +1,7 @@
 package Model;
 
+import Exception.AddressException;
+
 public class Address {
     private int addressId;
     private String address;
@@ -12,7 +14,9 @@ public class Address {
         this.addressId = 0;
         this.address = "";
         this.address2 = "";
-        this.city = new City();
+        this.city = null;
+        this.postalCode = "";
+        this.phone = "";
     }
 
     public Address(int addressId, String address, String address2, City city, String postalCode, String phone){
@@ -72,7 +76,28 @@ public class Address {
         this.phone = phone;
     }
 
-    public boolean isValid() {
-        return getAddressId() != 0 && getAddress() != "" && getCity().getCityId() != 0 && getPostalCode() != "" && getPhone() != "";
+    public boolean isValid() throws AddressException {
+        if(this.address.equals("")){
+            throw new AddressException("Address 1 is required");
+        }
+
+        if(this.address2.equals("")){
+            throw new AddressException("Address 2 is required");
+        }
+
+        if(this.city == null){
+            throw new AddressException("City is required");
+        }
+
+        if(this.postalCode.equals("")){
+            throw new AddressException("Postal Code/Zip is required");
+        }
+
+        if(this.phone.equals("")){
+            throw new AddressException("Phone is required");
+        }
+
+
+        return true;
     }
 }

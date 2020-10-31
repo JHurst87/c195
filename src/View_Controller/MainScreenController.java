@@ -6,7 +6,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.stage.*;
-import utils.DBConnection;
 
 import javafx.event.ActionEvent;
 import java.io.IOException;
@@ -29,7 +28,6 @@ public class MainScreenController implements Initializable {
 
     @FXML
     public void onActionAppointments(ActionEvent event) {
-        System.out.println("Load Appointments screen");
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/Appointments.fxml"));
         View_Controller.AppointmentsController controller = new AppointmentsController();
@@ -47,7 +45,6 @@ public class MainScreenController implements Initializable {
 
     @FXML
     public void onActionCustomers(ActionEvent event) {
-        System.out.println("Load Customers screen");
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/Customers.fxml"));
         try {
@@ -64,7 +61,6 @@ public class MainScreenController implements Initializable {
 
     @FXML
     public void onActionReports(ActionEvent event) {
-        System.out.println("Load Reports screen");
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/Reports.fxml"));
         Parent root = null;

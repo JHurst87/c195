@@ -77,7 +77,6 @@ public class ModifyAppointmentController implements Initializable {
     public ModifyAppointmentController(Appointment appointment, Boolean isNewAppointment) {
         this.appointment = appointment;
         this.isNewAppointment = isNewAppointment;
-        System.out.println("Ran modified Appointment constructor!");
         if (isNewAppointment) {
             this.appointment = new Appointment();
         }
@@ -144,13 +143,11 @@ public class ModifyAppointmentController implements Initializable {
     }
 
     public void onActionCancel(ActionEvent event) throws IOException {
-        System.out.println("Go Back to Appointments");
         View_Controller.AppointmentsController controller = new AppointmentsController();
         showScreen("/View_Controller/Appointments.fxml", "Appointments", event, controller);
     }
 
     public void onActionSave(ActionEvent event) throws IOException {
-        System.out.println("Save/Edit Appointment");
         try{
             Customer newCustomer = apptCustomerComboBox.getValue();
             String newLocation = apptLocation.getText();

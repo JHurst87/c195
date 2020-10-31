@@ -41,11 +41,9 @@ public class CustomersController implements Initializable{
         cityCol.setCellValueFactory(data-> new SimpleStringProperty(data.getValue().getAddress().getCity().getCityName()));
         postalCode.setCellValueFactory(data-> new SimpleStringProperty(data.getValue().getAddress().getPostalCode()));
         setCustomerTableView();
-
     }
 
     public void onActionReturn(ActionEvent event){
-        System.out.println("Return to Main Menu");
         try {
             showScreen("/View_Controller/MainScreen.fxml", "Customers", event);
         } catch (IOException e) {
@@ -54,7 +52,6 @@ public class CustomersController implements Initializable{
     }
 
     public void onActionAdd(ActionEvent event) throws IOException {
-        System.out.println("Add Customer!");
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/ModifyCustomer.fxml"));
         View_Controller.ModifyCustomerController controller = new View_Controller.ModifyCustomerController(new Customer(),true);
@@ -65,10 +62,7 @@ public class CustomersController implements Initializable{
         stage.show();
     }
 
-
-
     public void onActionEdit(ActionEvent event) throws IOException{
-        System.out.println("Edit Customer!");
         try{
             selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
             if(selectedCustomer == null){
@@ -89,7 +83,6 @@ public class CustomersController implements Initializable{
     }
 
     public void onActionDelete(ActionEvent event) throws IOException{
-        System.out.println("Delete Customer");
         try{
             selectedCustomer = customerTableView.getSelectionModel().getSelectedItem();
             if( selectedCustomer == null) {
@@ -104,7 +97,6 @@ public class CustomersController implements Initializable{
                 Optional<ButtonType> option = alert.showAndWait();
                 if(option.isPresent() && option.get() == ButtonType.OK) {
                     CustomerDaoImpl.delete(selectedCustomer);
-                    System.out.println("Delete and update view!");
                     setCustomerTableView();
                 }
             }

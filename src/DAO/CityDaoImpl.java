@@ -3,9 +3,6 @@ package DAO;
 import Main.AppointmentApp;
 import Model.City;
 import Model.Country;
-import com.mysql.cj.protocol.Resultset;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import utils.DBConnection;
 import utils.DBQuery;
 
@@ -21,7 +18,6 @@ public class CityDaoImpl {
 
     public int getNextId(){
         String nextIdQuery = "SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'U06exx' AND TABLE_NAME = 'city';";
-
         try {
             Connection conn = DBConnection.startConnection();
             DBQuery.setPrepareStatement(conn, nextIdQuery);
@@ -47,10 +43,6 @@ public class CityDaoImpl {
             ps.setInt(1, cityId);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                //System.out.println("Got the city of: " + rs.getString("city"));
-                System.out.println(rs.getInt("cityId"));
-                System.out.println(rs.getString("city"));
-                System.out.println(rs.getInt("countryId"));
                 city.setCityId(rs.getInt("cityId"));
                 city.setCityName(rs.getString("city"));
                 city.setCountry(CountryDaoImpl.getById(rs.getInt("countryId")));
@@ -76,7 +68,6 @@ public class CityDaoImpl {
             ps.executeUpdate();
             ResultSet generatedKeys = ps.getGeneratedKeys();
             if(generatedKeys.next()){
-                System.out.println("Genearated Columns: " +generatedKeys.getInt(1));
                 return generatedKeys.getInt(1);
             }
 

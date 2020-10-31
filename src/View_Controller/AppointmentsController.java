@@ -66,6 +66,7 @@ public class AppointmentsController implements Initializable{
 
     public void onActionThisMonth(ActionEvent event){
         // Show this month's appointments from day 1 to day 30/31/28 depending on the month
+        this.currentView = "monthly";
         thisMonth();
     }
 
@@ -105,21 +106,19 @@ public class AppointmentsController implements Initializable{
 
     private void setAppointmentsTableView(ObservableList<Appointment> appointments){
         appointmentsTableView.setItems(appointments);
-        //appointmentsTableView.refresh();
     }
 
     public void onActionThisWeek(ActionEvent event){
-        System.out.println("Show Only This week's appointments!");
+        this.currentView = "weekly";
         thisWeek();
     }
 
     public void onActionShowAll(ActionEvent event){
-        System.out.println("Show All appointments!");
+        this.currentView = "all";
         showAll();
     }
 
     public void onActionAdd(ActionEvent event){
-        System.out.println("Add Appointment");
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/ModifyAppointment.fxml"));
         View_Controller.ModifyAppointmentController controller = new ModifyAppointmentController(new Appointment(), true);
@@ -136,7 +135,6 @@ public class AppointmentsController implements Initializable{
     }
 
     public void onActionEdit(ActionEvent event){
-        System.out.println("Modify Appointment");
         selectedApppointment = appointmentsTableView.getSelectionModel().getSelectedItem();
         if(selectedApppointment == null){
             alert = new Alert(Alert.AlertType.ERROR);
@@ -150,8 +148,6 @@ public class AppointmentsController implements Initializable{
     }
 
     public void onActionDelete(ActionEvent event){
-        System.out.println("Delete Appointment");
-
         //Soft Delete
 
         try{
@@ -169,7 +165,7 @@ public class AppointmentsController implements Initializable{
                 Optional<ButtonType> option = alert.showAndWait();
                 if(option.isPresent() && option.get() == ButtonType.OK) {
                     AppointmentDaoImpl.delete(selectedApppointment);
-                    System.out.println("Delete and update view!");
+                    refreshCurrentView();
                 }
             }
         }
@@ -179,11 +175,9 @@ public class AppointmentsController implements Initializable{
             alert.setTitle("No Customer Selected Error");
             alert.show();
         }
-
     }
 
     public void onActionReturn(ActionEvent event){
-        System.out.println("Return to Main Menu");
         stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View_Controller/MainScreen.fxml"));
         View_Controller.MainScreenController controller = new View_Controller.MainScreenController();
@@ -211,6 +205,20 @@ public class AppointmentsController implements Initializable{
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void refreshCurrentView(){
+        switch(currentView){
+            case "monthly":
+                thisMonth();
+            break;
+            case "weekly":
+                thisWeek();
+            break;
+            case "all":
+                showAll();
+            break;
         }
     }
 }

@@ -1,11 +1,9 @@
 package DAO;
 
 import Main.AppointmentApp;
-import Model.City;
 import Model.Country;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import utils.DBConnection;
 import utils.DBQuery;
 
 import java.sql.Connection;
@@ -47,8 +45,6 @@ public class CountryDaoImpl {
             ps.setInt(1, countryId);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                System.out.println(rs.getInt("countryId"));
-                System.out.println(rs.getString("country"));
                 country =  new Country(
                         rs.getInt("countryId"),
                         rs.getString("country")

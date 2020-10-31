@@ -5,8 +5,6 @@ import Model.Appointment;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import utils.DBQuery;
-import utils.DBConnection;
-import DAO.CustomerDaoImpl;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -211,9 +209,8 @@ public class AppointmentDaoImpl {
             ps.setTimestamp(10, Timestamp.valueOf(endTimeUTC));
             ps.setInt(11,appointment.getAppointmentId());
 
-            int affectedRows = ps.executeUpdate();
+            return ps.executeUpdate();
 
-            System.out.println("Affected Rows: " + affectedRows);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -221,17 +218,61 @@ public class AppointmentDaoImpl {
         return 0;
     }
 
-    public static int delete(Appointment appointment){
+    public static int delete(Appointment appointment) throws SQLException{
         String query = "DELETE FROM appointment WHERE appointmentId = ?";
-        try{
-            PreparedStatement ps = conn.prepareStatement(query);
-            ps.setInt(1, appointment.getAppointmentId());
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setInt(1, appointment.getAppointmentId());
 
-            int deletedRows = ps.executeUpdate();
-            System.out.println("Deleted Rows: " + deletedRows);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        return ps.executeUpdate();
+    }
+
+    public static ObservableList<Appointment> getOverlappingAppointments(LocalDateTime start, LocalDateTime end) throws SQLException{
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+
+        String query = String.join(" ", "SELECT * FROM appointment",
+                "WHERE start >= ? AND end <= ?",
+                "OR start BETWEEN ? AND ? OR end BETWEEN ? AND ?",
+                "OR start <= ? AND end >= ?"
+        );
+
+        PreparedStatement ps = conn.prepareStatement(query);
+
+        ZoneId zone = ZoneId.systemDefault();
+        LocalDateTime startDateTimeUTC = start.atZone(zone).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
+        LocalDateTime endDateTimeUTC = end.atZone(zone).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
+        ps.setTimestamp(1, Timestamp.valueOf(startDateTimeUTC));
+        ps.setTimestamp(2, Timestamp.valueOf(endDateTimeUTC));
+        ps.setTimestamp(3, Timestamp.valueOf(startDateTimeUTC));
+        ps.setTimestamp(4, Timestamp.valueOf(endDateTimeUTC));
+        ps.setTimestamp(5, Timestamp.valueOf(startDateTimeUTC));
+        ps.setTimestamp(6, Timestamp.valueOf(endDateTimeUTC));
+        ps.setTimestamp(7, Timestamp.valueOf(startDateTimeUTC));
+        ps.setTimestamp(8, Timestamp.valueOf(endDateTimeUTC));
+
+        ResultSet rs = ps.executeQuery();
+
+        while(rs.next()){
+            Appointment appointment = new Appointment();
+
+            appointment.setAppointmentId(rs.getInt("appointmentId"));
+            appointment.setCustomer(CustomerDaoImpl.getById(rs.getInt("customerId")));
+            appointment.setTitle(rs.getString("title"));
+            appointment.setDescription(rs.getString("description"));
+            appointment.setLocation(rs.getString("location"));
+            appointment.setContact(rs.getString("contact"));
+            appointment.setType(rs.getString("type"));
+            appointment.setUrl(rs.getString("url"));
+
+            LocalDateTime startUTC = rs.getTimestamp("start").toLocalDateTime();
+            LocalDateTime endUTC = rs.getTimestamp("end").toLocalDateTime();
+            LocalDateTime startLocalDT = startUTC.atZone(ZoneOffset.UTC).withZoneSameInstant(zone).toLocalDateTime();
+            LocalDateTime endLocalDT = endUTC.atZone(ZoneOffset.UTC).withZoneSameInstant(zone).toLocalDateTime();
+
+            appointment.setStart(startLocalDT);
+            appointment.setEnd(endLocalDT);
+
+            appointments.add(appointment);
         }
-        return 0;
+        return appointments;
     }
 }
