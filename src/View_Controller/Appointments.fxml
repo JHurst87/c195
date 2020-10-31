@@ -48,9 +48,9 @@
       <children>
          <Button alignment="CENTER" layoutX="424.0" layoutY="14.0" mnemonicParsing="false" onAction="#onActionNextMonth" prefHeight="27.0" prefWidth="165.0" text="Next" textAlignment="CENTER" />
          <Button alignment="CENTER" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#onActionPrevMonth" prefHeight="27.0" prefWidth="165.0" text="Previous" textAlignment="CENTER" />
-         <Label alignment="CENTER" layoutX="202.0" layoutY="6.0" prefHeight="44.0" prefWidth="200.0" text="Month" textAlignment="CENTER">
+         <Label fx:id="monthLabel" alignment="CENTER" layoutX="202.0" layoutY="5.0" prefHeight="44.0" prefWidth="200.0" text="Month" textAlignment="CENTER">
             <font>
-               <Font size="36.0" />
+               <Font size="24.0" />
             </font>
          </Label>
       </children>

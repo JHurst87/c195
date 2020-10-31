@@ -40,7 +40,6 @@ public class AppointmentsController implements Initializable{
     //Month Label
     @FXML private Label monthLabel;
 
-
     //Appointments
 
     @FXML private TableView<Appointment> appointmentsTableView = new TableView<Appointment>();
@@ -93,6 +92,7 @@ public class AppointmentsController implements Initializable{
 
     public void onActionNextMonth(ActionEvent event){
         theMonth = theMonth.plusMonths(1);
+        System.out.println("Next Month");
         calendarView();
     }
 
@@ -105,10 +105,12 @@ public class AppointmentsController implements Initializable{
 
         appointments = AppointmentDaoImpl.getByDateRange(startDT, endDT);
         setAppointmentsTableView(appointments);
+
     }
 
     public void onActionPrevMonth(ActionEvent event){
         theMonth = theMonth.minusMonths(1);
+        System.out.println("Previous Month");
         calendarView();
     }
 
